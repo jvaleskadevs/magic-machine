@@ -5,7 +5,7 @@ import { MINT, URL } from './config';
 const title = 'Magic Machine';
 const description = 'Magic Machine';
 const image = `${URL}/intro.png`;
-const targetUrl = `${URL}/api/frame/mint`;
+const targetUrl = `${URL}/api/frame`;
 
 const frameMetadata = getFrameMetadata({
   buttons: [
