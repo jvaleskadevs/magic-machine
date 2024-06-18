@@ -11,7 +11,7 @@ import { baseSepolia } from 'viem/chains';
 import { MINT, URL } from '../../config';
 import { Errors } from '../../errors';
 
-init(process.env.NEXT_PUBLIC_AIRSTACK_API_KEY ?? '');
+init(process.env.AIRSTACK_API_KEY ?? '');
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   const body: ValidateFramesMessageInput = await req.json();
