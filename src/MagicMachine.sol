@@ -21,7 +21,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @notice That amount of ether must be paid before every random distribution.
     ///
     /// @dev The `owner` may change that `price` with the `setPrice` function.
-    uint256 public price = 0.000777 ether;
+    uint256 public price = 0.01 ether;
 
     /// @notice A wrapper struct for store nft data, address and ID.
     struct NFT {
@@ -66,7 +66,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @notice Deposits multiple NFTs into the Magic Machine contract.
     ///
     /// @dev Arrays must have the same length and every address index must match the ID index.
-    ///      This function triggers the receiver interface and updates the nfts map.
+    ///      This function updates the nfts map.
     ///
     /// @param tokenAddresses     List of nfts addresses to be deposited.
     /// @param tokenIds           List of nfts IDs to be deposited.
@@ -84,6 +84,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
 
             // Transfer the NFT to the contract
             if (isERC1155(tokenAddress)) {
+                nfts[totalNfts++] = NFT(tokenAddress, tokenId);
                 IERC1155(tokenAddress).safeTransferFrom(
                     msg.sender, 
                     address(this), 
@@ -91,8 +92,11 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
                     1, 
                     ""
                 );
+                emit NewDeposit(tokenAddress, tokenId);
             } else if (isERC721(tokenAddress)) {
+                nfts[totalNfts++] = NFT(tokenAddress, tokenId);
                 IERC721(tokenAddress).safeTransferFrom(msg.sender, address(this), tokenId);
+                emit NewDeposit(tokenAddress, tokenId);
             }
         }
         
@@ -107,15 +111,15 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     function loadMachine() public onlyOwner {
         for (uint256 i = 0; i < 69; i++) {
             if (nfts[lastMappingIndex].addr != address(0) && machine[i] == 0) {
-                machine[i] = lastMappingIndex;
-                lastMappingIndex++;
+                machine[i] = lastMappingIndex++;
+                //lastMappingIndex++;
             }
         }
     }
     
     /// @notice Prune or remove the selected indexes from the Magic Machine.
     ///
-    /// @dev Useful after `emergencyRecovery` to clean failing transfers.
+    /// @dev Useful after calling `emergencyRecovery` to clean failing transfers.
     ///
     /// @param machineIndexes  The list of indexes to remove from the machine array.
     function pruneMachine(uint256[] calldata machineIndexes) public onlyOwner {
@@ -211,8 +215,9 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     
     /// @notice Withdraw multiple NFTs, only for emergencies. Migration, locked nfts..
     // 
-    /// @dev Does not remove the nft index from the machine, anyone could "win" it but the 
-    ///      transaction, obv, will fail. Use it in combination with `loadMachine(true)`.
+    /// @dev It cleans the nft from the machine but does not remove the nft from the nfts mapping,
+    ///      the nft could be loaded into the machine and anyone could "win" it but the transaction
+    ///      obv, will fail. Calling `pruneMachine` with the index from the error logs will solve it.
     function emergencyWithdraw(
         address[] calldata tokenAddresses, 
         uint256[] calldata tokenIds
@@ -287,7 +292,31 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         }
         return false;
     }    
+
+    /// @dev See {IERC721Receiver-onERC721Received}.
+    ///      Always returns `IERC721Receiver.onERC721Received.selector`.
+    function onERC721Received(
+        address operator, 
+        address from, 
+        uint256 tokenId, 
+        bytes memory
+    ) public virtual override returns (bytes4) {
+        return this.onERC721Received.selector;
+    }
     
+    /// @dev See {IERCReceiver-onERC721Received}.
+    /// @dev See {IERC165-supportsInterface}.
+    ///      Always returns `IERC721Receiver.onERC721Received.selector`.
+    function onERC1155Received(
+        address operator,
+        address from,
+        uint256 id,
+        uint256 value,
+        bytes memory
+    ) public virtual override returns (bytes4) {
+        return this.onERC1155Received.selector;
+    }
+/*    
     /// @dev See {IERC721Receiver-onERC721Received}.
     ///      Always returns `IERC721Receiver.onERC721Received.selector`.
     function onERC721Received(
@@ -317,6 +346,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         emit NewDeposit(operator, id);
         return this.onERC1155Received.selector;
     }
+    */
 /* no tested, probably useless, uncomment in case of find one
     /// @dev See {IERC165-supportsInterface}.
     function onERC1155BatchReceived(
@@ -334,4 +364,4 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         return this.onERC1155BatchReceived.selector;
     }
 */
-} // 0x1b8B03327D0a2b2e222BCE579664311617f013d7
+} // 0x585077dEa6FBcDEbAA0D405756B7D3645b00e977
