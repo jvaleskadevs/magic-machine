@@ -14,5 +14,5 @@ type ContractData = {
 // base Sepolia contracts
 export const MINT: ContractData = {
   abi: mintAbi,
-  address: '0x585077dEa6FBcDEbAA0D405756B7D3645b00e977'
+  address: '0x5Fc398E3B7bd56340d949030Fc396fC92758aFC8'
 }

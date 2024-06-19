@@ -21,7 +21,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @notice That amount of ether must be paid before every random distribution.
     ///
     /// @dev The `owner` may change that `price` with the `setPrice` function.
-    uint256 public price = 0.01 ether;
+    uint256 public price = 0.000777 ether;
 
     /// @notice A wrapper struct for store nft data, address and ID.
     struct NFT {
@@ -84,7 +84,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
 
             // Transfer the NFT to the contract
             if (isERC1155(tokenAddress)) {
-                nfts[totalNfts++] = NFT(tokenAddress, tokenId);
+                nfts[++totalNfts] = NFT(tokenAddress, tokenId);
                 IERC1155(tokenAddress).safeTransferFrom(
                     msg.sender, 
                     address(this), 
@@ -94,7 +94,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
                 );
                 emit NewDeposit(tokenAddress, tokenId);
             } else if (isERC721(tokenAddress)) {
-                nfts[totalNfts++] = NFT(tokenAddress, tokenId);
+                nfts[++totalNfts] = NFT(tokenAddress, tokenId);
                 IERC721(tokenAddress).safeTransferFrom(msg.sender, address(this), tokenId);
                 emit NewDeposit(tokenAddress, tokenId);
             }

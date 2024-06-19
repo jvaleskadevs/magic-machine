@@ -40,7 +40,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         abi: MINT.abi,
         data,
         to: MINT.address,
-        value: parseEther('0.01').toString()
+        value: parseEther('0.000777').toString()
       }
     };
         
