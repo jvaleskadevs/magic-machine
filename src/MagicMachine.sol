@@ -36,7 +36,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @notice The total count of nfts in the nfts mapping.
     uint256 public totalNfts;
     /// @notice The Index of the last item moved from the nfts mapping to the machine.
-    uint256 public lastMappingIndex;    
+    uint256 public lastMappingIndex = 1;    
     /// @notice The list of items available for next random distribution aka the machine.
     uint256[69] public machine;
     
@@ -111,8 +111,8 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     function loadMachine() public onlyOwner {
         for (uint256 i = 0; i < 69; i++) {
             if (nfts[lastMappingIndex].addr != address(0) && machine[i] == 0) {
-                machine[i] = ++lastMappingIndex;
-                //lastMappingIndex++;
+                machine[i] = lastMappingIndex;
+                lastMappingIndex++;
             }
         }
     }
