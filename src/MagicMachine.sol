@@ -111,7 +111,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     function loadMachine() public onlyOwner {
         for (uint256 i = 0; i < 69; i++) {
             if (nfts[lastMappingIndex].addr != address(0) && machine[i] == 0) {
-                machine[i] = lastMappingIndex++;
+                machine[i] = ++lastMappingIndex;
                 //lastMappingIndex++;
             }
         }
