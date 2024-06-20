@@ -192,22 +192,15 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         ) % machine.length;
         
         // If that position in the array is empty (0), add 1 until find non-zero value
-        // the cost of that is lower than rerolling the randomization.
+        // the cost of that is lower than rerolling the randomization
         if (machine[randomIdx] == 0) {
             for (uint i = 0; i < 69; i++) {
                 randomIdx = machine[i] == 0 ? ++randomIdx : i;
+                if (machine[randomIdx] != 0) {
+                    break;
+                }
             }
-        }
-        
-        uint counter = 0;
-        while (machine[randomIdx] == 0) {
-            randomIdx = randomIdx < 68 ? ++randomIdx : 0;
-
-            counter++;
-            if (counter == 69) {
-                revert EmptyMachine();
-            }
-        }        
+        }       
     }
     
     /// @notice Sets the `price` that must be paid to call the `distributeRandomItem` function.

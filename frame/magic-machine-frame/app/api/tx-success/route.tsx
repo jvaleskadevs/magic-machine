@@ -19,7 +19,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   
   const logs = txReceipt?.logs ?? [];
   for (let i = 0; i < logs.length; i++) {
-    if (logs[i].address === MINT.address) {
+    if (logs[i].address === MINT.address.toLowerCase()) {
       const events = logs[i]?.topics ?? [];
       for (let e = 0; e < events.length; e++) {
         console.log(events[e]);
