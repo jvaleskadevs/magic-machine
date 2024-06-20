@@ -57,7 +57,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @notice Emitted after a successfully deposit or transfer of an nft into the contract.
     event NewDeposit(address indexed nft, uint256 id);
     /// @notice Emitted after a successfully distribution of an nft from the machine.
-    event NewDistribution(address indexed nft, uint id, address indexed recipient, uint price);
+    event NewDistribution(address indexed nft, uint indexed id, address indexed recipient, uint price);
     /// @notice Emitted after a successfully withdraw of an nft from the contract.
     event NewWithdrawal(address indexed nft, uint256 id);
     

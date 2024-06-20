@@ -18,12 +18,19 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const txReceipt = hash !== '0x' ? await getTxDetails(hash) : undefined;
   
   const logs = txReceipt?.logs ?? [];
+  let nft = '';
+  let tokenId = '';
   for (let i = 0; i < logs.length; i++) {
     if (logs[i].address === MINT.address.toLowerCase()) {
       const events = logs[i]?.topics ?? [];
+      nft = events?.[0] ?? '';
+      tokenId = events?.[1] ?? '';
+/*
       for (let e = 0; e < events.length; e++) {
         console.log(events[e]);
+        
       }
+*/
     } 
   }
   
@@ -35,7 +42,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         {
           action: 'link',
           label: 'View artwork',
-          target: `https://opensea.io/assets/base/`
+          target: `https://testnets.opensea.io/assets/base-sepolia/${nft}/${tokenId}`
         },
         {
           action: 'link',
