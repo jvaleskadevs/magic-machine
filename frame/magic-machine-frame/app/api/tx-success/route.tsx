@@ -1,5 +1,6 @@
 import { FrameRequest, getFrameMessage, getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NextRequest, NextResponse } from 'next/server';
+import { trim } from 'viem';
 import { getTxDetails } from '../../lib/tx';
 import { MINT, URL } from '../../config';
 
@@ -18,13 +19,13 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const txReceipt = hash !== '0x' ? await getTxDetails(hash) : undefined;
   
   const logs = txReceipt?.logs ?? [];
-  let nft = '';
-  let tokenId = '';
+  let nft:`0x${string}` = '0x';
+  let tokenId: `0x${string}` = '0x';
   for (let i = 0; i < logs.length; i++) {
     if (logs[i].address === MINT.address.toLowerCase()) {
       const events = logs[i]?.topics ?? [];
-      nft = events?.[0] ?? '';
-      tokenId = events?.[1] ?? '';
+      nft = (events?.[1] ?? '0x') as `0x${string}`;
+      tokenId = (events?.[2] ?? '0x') as `0x${string}`;
 /*
       for (let e = 0; e < events.length; e++) {
         console.log(events[e]);
@@ -34,7 +35,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     } 
   }
   
-  //const contract = req.nextUrl.searchParams.get('nft') ?? '';
+  //if (!nft) {}
   
   return new NextResponse(
     getFrameHtmlResponse({
@@ -42,7 +43,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         {
           action: 'link',
           label: 'View artwork',
-          target: `https://testnets.opensea.io/assets/base-sepolia/${nft}/${tokenId}`
+          target: `https://testnets.opensea.io/assets/base-sepolia/${trim(nft)}/${trim(tokenId)}`
         },
         {
           action: 'link',
