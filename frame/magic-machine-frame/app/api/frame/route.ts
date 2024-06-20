@@ -54,7 +54,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         action: 'tx',
         label: 'Random Mint',
         target: targetUrl,
-        postUrl: `${URL}/api/frame/tx-success?nft=${MINT.address}`
+        postUrl: `${URL}/api/tx-success?nft=${MINT.address}`
       }
     ],
     image: {

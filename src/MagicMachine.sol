@@ -193,14 +193,18 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         
         // If that position in the array is empty (0), add 1 until find non-zero value
         // the cost of that is lower than rerolling the randomization.
+        if (machine[randomIdx] == 0) {
+            for (uint i = 0; i < 69; i++) {
+                randomIdx = machine[i] == 0 ? ++randomIdx : i;
+            }
+        }
+        
         uint counter = 0;
         while (machine[randomIdx] == 0) {
-            if (randomIdx < 68) {
-                randomIdx++;
-            } else {
-                randomIdx = 0;
-            }
-            if (++counter == 69) {
+            randomIdx = randomIdx < 68 ? ++randomIdx : 0;
+
+            counter++;
+            if (counter == 69) {
                 revert EmptyMachine();
             }
         }        
@@ -296,9 +300,9 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @dev See {IERC721Receiver-onERC721Received}.
     ///      Always returns `IERC721Receiver.onERC721Received.selector`.
     function onERC721Received(
-        address operator, 
-        address from, 
-        uint256 tokenId, 
+        address /*operator*/, 
+        address /*from*/, 
+        uint256 /*tokenId*/, 
         bytes memory
     ) public virtual override returns (bytes4) {
         return this.onERC721Received.selector;
@@ -308,10 +312,10 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @dev See {IERC165-supportsInterface}.
     ///      Always returns `IERC721Receiver.onERC721Received.selector`.
     function onERC1155Received(
-        address operator,
-        address from,
-        uint256 id,
-        uint256 value,
+        address /*operator*/,
+        address /*from*/,
+        uint256 /*id*/,
+        uint256 /*value*/,
         bytes memory
     ) public virtual override returns (bytes4) {
         return this.onERC1155Received.selector;
