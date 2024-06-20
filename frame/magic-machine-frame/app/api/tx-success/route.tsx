@@ -1,7 +1,7 @@
 import { FrameRequest, getFrameMessage, getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NextRequest, NextResponse } from 'next/server';
 import { getTxDetails } from '../../lib/tx';
-import { URL } from '../../config';
+import { MINT, URL } from '../../config';
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   const body: FrameRequest = await req.json();
@@ -15,8 +15,17 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log(body);
   
   const hash: `0x${string}` = `${body?.untrustedData?.transactionId || '0x'}` as `0x${string}`;
-  console.log(hash);
   const txReceipt = hash !== '0x' ? await getTxDetails(hash) : undefined;
+  
+  const logs = txReceipt?.logs ?? [];
+  for (let i = 0; i < logs.length; i++) {
+    if (logs[i].address === MINT.address) {
+      const events = logs[i]?.topics ?? [];
+      for (let e = 0; e < events.length; e++) {
+        console.log(events[e]);
+      }
+    } 
+  }
   
   //const contract = req.nextUrl.searchParams.get('nft') ?? '';
   
@@ -31,7 +40,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         {
           action: 'link',
           label: 'View in Explorer',
-          target: `https://sepolia.basescan.org/${body?.untrustedData?.transactionId || ''}`
+          target: `https://sepolia.basescan.org/tx/${body?.untrustedData?.transactionId || ''}`
         },
       ],
       image: {
