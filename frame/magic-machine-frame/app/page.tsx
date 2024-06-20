@@ -4,7 +4,7 @@ import { MINT, URL } from './config';
 
 const title = 'Magic Machine';
 const description = 'Magic Machine';
-const image = `${URL}/intro.png`;
+const image = `${URL}/intro.jpeg`;
 const targetUrl = `${URL}/api/frame`;
 
 const frameMetadata = getFrameMetadata({

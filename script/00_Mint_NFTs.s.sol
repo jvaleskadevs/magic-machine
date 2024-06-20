@@ -22,10 +22,10 @@ contract MintNFTsScript is Script {
         NFT nft = new NFT(deployer);
         NFT1155 nft1155 = new NFT1155(deployer);
 
-        address[] memory addresses = new address[](6);
-        uint256[] memory tokenIds = new uint256[](6);  
+        address[] memory addresses = new address[](44);
+        uint256[] memory tokenIds = new uint256[](44);  
         
-        for (uint i = 0; i < 3; i++) {
+        for (uint i = 0; i < 22; i++) {
             nft.safeMint(deployer, "");
             nft.approve(machineAddress, i);
             nft1155.mint(deployer, i, 1, "");
@@ -33,9 +33,9 @@ contract MintNFTsScript is Script {
             //nft.safeTransferFrom(address(0x26281BB0b775A59Db0538b555f161E8F364fd21e), address(0x1b8B03327D0a2b2e222BCE579664311617f013d7), i);
 
             addresses[i] = address(nft);
-            addresses[i+3] = address(nft1155);
+            addresses[i+22] = address(nft1155);
             tokenIds[i] = i;       
-            tokenIds[i+3] = i;      
+            tokenIds[i+22] = i;      
         }
         nft1155.setApprovalForAll(machineAddress, true);
         

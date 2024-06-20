@@ -58,7 +58,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       }
     ],
     image: {
-      src: `${URL}/wave_0.png`,
+      src: `${URL}/intro.jpeg`,
       aspectRatio: '1:1'
     },
     postUrl: targetUrl

@@ -30,7 +30,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         },
       ],
       image: {
-        src: `${URL}/success.png`,
+        src: `${URL}/success.jpeg`,
       },
     })
   );

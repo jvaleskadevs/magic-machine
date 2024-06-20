@@ -20,8 +20,11 @@ contract PruneMachineScript is Script {
         vm.startBroadcast(vm.envUint("PK"));
         
         console.log(mm.machine(0));
-        mm.pruneMachine(indexes);
+        //mm.pruneMachine(indexes);
         //mm.withdraw(deployer);
-        console.log(mm.machine(0));
+        mm.distributeRandomItem{value: mm.price()}();
+        for (uint i = 0; i < 69; i++) {
+            console.log(mm.machine(i));
+        }
     }
 }
