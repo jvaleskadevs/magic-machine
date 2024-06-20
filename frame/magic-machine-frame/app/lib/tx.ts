@@ -8,7 +8,7 @@ const client = createPublicClient({
 });
 
 export const getTxDetails = async (hash: `0x${string}`): Promise<TransactionReceipt | undefined>  => {
-  const transactionReceipt = await client.getTransactionReceipt({ hash });
+  const transactionReceipt = await client.waitForTransactionReceipt({ hash });
   console.log(transactionReceipt);
   return transactionReceipt || undefined;
 }
