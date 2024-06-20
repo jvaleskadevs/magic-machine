@@ -12,7 +12,7 @@ contract MintNFTsScript is Script {
     }
 
     function run() public {
-        address machineAddress = address(0x88154b8CB1d35FF1a99C06f49b2f6e23914A0C0C);
+        address machineAddress = address(0xA8970362E763a4c7d3B3b58180471a37eD207209);
         //address nftAddress = address(0x1A77fc9E7F2b95399497dCDBE82a030B9F05a9aD);
         address deployer = address(0x26281BB0b775A59Db0538b555f161E8F364fd21e);
     
@@ -41,8 +41,6 @@ contract MintNFTsScript is Script {
         
         mm.deposit(addresses, tokenIds, true);
         
-        console.log(mm.machine(2));
-        console.log(mm.machine(3));
         console.log(mm.totalNfts());
         console.log(mm.lastMappingIndex());
         
