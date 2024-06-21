@@ -1,6 +1,6 @@
 import { getFrameMetadata } from '@coinbase/onchainkit/frame';
 import type { Metadata } from 'next';
-import { MINT, URL } from './config';
+import { URL } from './config';
 
 const title = 'Magic Machine';
 const description = 'Magic Machine';
@@ -35,5 +35,5 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <><h1>Magic Machine</h1></>
+  return <><h1>Magic Machine is a Farcaster frame.</h1></>
 }

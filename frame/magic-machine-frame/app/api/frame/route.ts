@@ -3,12 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   init,
   validateFramesMessage,
-  ValidateFramesMessageInput,
-  ValidateFramesMessageOutput,
+  ValidateFramesMessageInput
 } from '@airstack/frames';
-import { Address, encodeFunctionData, parseEther, toHex } from 'viem';
+import { Address, encodeFunctionData, toHex } from 'viem';
 import { baseSepolia } from 'viem/chains';
-import { MINT, URL } from '../../config';
+import { MACHINE, PRICE, URL } from '../../config';
 import { Errors } from '../../errors';
 
 init(process.env.AIRSTACK_API_KEY ?? '');
@@ -16,20 +15,13 @@ init(process.env.AIRSTACK_API_KEY ?? '');
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   const body: ValidateFramesMessageInput = await req.json();
   const { isValid, message } = await validateFramesMessage(body);
-  
   if (!isValid) return new NextResponse(Errors.NoValidMessage);
 
-  //const fid: number | undefined = message?.data?.fid || undefined;
   const action = message?.data?.frameActionBody || undefined;
-  
-  //console.log(toHex(action?.castId?.hash ?? ''));
-  
-  //const text = action?.inputText?.[0] || '';
  
-  if (action?.buttonIndex === 1) {   
-    // build transaction data   
+  if (action?.buttonIndex === 1) {
     const data = encodeFunctionData({
-      abi: MINT.abi,
+      abi: MACHINE.abi,
       functionName: 'distributeRandomItem'
     });
     
@@ -37,10 +29,10 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       chainId: `eip155:${baseSepolia.id}`,
       method: 'eth_sendTransaction',
       params: {
-        abi: MINT.abi,
+        abi: MACHINE.abi,
         data,
-        to: MINT.address,
-        value: parseEther('0.000777').toString()
+        to: MACHINE.address,
+        value: PRICE
       }
     };
         

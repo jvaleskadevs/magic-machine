@@ -10,8 +10,8 @@ contract PruneMachineScript is Script {
     }
 
     function run() public {
-        address machineAddress = address(0x88154b8CB1d35FF1a99C06f49b2f6e23914A0C0C);
-        //address deployer = address(0x26281BB0b775A59Db0538b555f161E8F364fd21e);
+        address machineAddress = address(0x1b9d13c9acA71363cC0E336D01d9749B831995F3);
+        address deployer = address(0xA9fD03e154e1B3Cbe88F1b515E7EbDAb2d640b60);
     
         MagicMachine mm = MagicMachine(machineAddress);
     
@@ -21,8 +21,10 @@ contract PruneMachineScript is Script {
         vm.startBroadcast(vm.envUint("PK"));
         
         //mm.pruneMachine(indexes);
-        //mm.withdraw(deployer);
-        mm.distributeRandomItem{value: mm.price()}();
+        mm.withdraw(deployer);
+        //mm.distributeRandomItem{value: mm.price()}();
+        //mm.distributeRandomItem{value: mm.price()}();
+        //mm.distributeRandomItem{value: mm.price()}();
         for (uint i = 0; i < 69; i++) {
             console.log(mm.machine(i));
         }
