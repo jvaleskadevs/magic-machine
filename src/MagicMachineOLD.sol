@@ -23,7 +23,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @dev The `owner` may change that `price` with the `setPrice` function.
     uint256 public price = 0.000777 ether;
 
-    /// @notice A wrapper struct for store the nft data: address and ID.
+    /// @notice A wrapper struct for store nft data, address and ID.
     struct NFT {
         /// @dev The contract address of the nft.
         address addr;
@@ -39,7 +39,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     uint256 public lastMappingIndex = 1;    
     /// @notice The list of items available for next random distribution aka the machine.
     uint256[69] public machine;
-    /// @notice The total count of nfts loaded in the machine.
+    /// @notice The total count of nfts loaded in the machine..
     uint256 public totalNftsMachine;
     
     /// @notice Thrown when calling `distributeRandomItem` with a wrong `price`.
@@ -52,12 +52,15 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     error Withdrawal();
     /// @notice Thrown on 'withdraw' when the recipient is the Zero address.
     error ZeroAddress();
+    /// @notice Thrown on 'distributeRandomItem' when the transfer call fails. 
+    /// @dev    Calling the `pruneMachine` function with the index from error logs will solve it.
+    error MustPrune(uint256 machineIndex);
     
-    /// @notice Emitted after a successful deposit of an nft into the contract.
+    /// @notice Emitted after a successfully deposit or transfer of an nft into the contract.
     event NewDeposit(address indexed nft, uint256 id);
-    /// @notice Emitted after a successful distribution of an nft from the machine.
+    /// @notice Emitted after a successfully distribution of an nft from the machine.
     event NewDistribution(address indexed nft, uint indexed id, address indexed recipient, uint price);
-    /// @notice Emitted after a successful withdraw of an nft from the contract.
+    /// @notice Emitted after a successfully withdraw of an nft from the contract.
     event NewWithdrawal(address indexed nft, uint256 id);
     
     constructor() Ownable(msg.sender) {}
@@ -65,6 +68,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @notice Deposits multiple NFTs into the Magic Machine contract.
     ///
     /// @dev Arrays must have the same length and every address index must match the ID index.
+    ///      This function updates the nfts map.
     ///
     /// @param tokenAddresses     List of nfts addresses to be deposited.
     /// @param tokenIds           List of nfts IDs to be deposited.
@@ -107,6 +111,11 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     ///
     /// @dev The machine has a total size of 69 slots. Empty slots contain the Zero value.
     function loadMachine() public onlyOwner {
+        if (totalNftsMachine == 0) {
+            // machine is empty
+        } else {
+            // machine is not empty
+        }
         for (uint256 i = 0; i < 69; i++) {
             if (nfts[lastMappingIndex].addr != address(0) && machine[i] == 0) {
                 machine[i] = lastMappingIndex;
@@ -116,34 +125,15 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         }
     }
     
-    /// @notice Load the Magic Machine starting from a desired index.
-    ///
-    /// @dev Useful after calling the `resetMachine` function.
-    function loadMachineFromIndex(uint256 startingIndex) public onlyOwner {
-        for (uint256 i = 0; i < 69; i++) {
-            if (nfts[startingIndex].addr != address(0) && machine[i] == 0) {
-                machine[i] = startingIndex;
-                totalNftsMachine++;
-            }
-            startingIndex++;
-        }
-    }
-    
-    /// @notice Prune the selected indexes from the Magic Machine.
+    /// @notice Prune or remove the selected indexes from the Magic Machine.
     ///
     /// @dev Useful after calling `emergencyRecovery` to clean failing transfers.
-    ///      When there is no more available nfts, the reload will be safely ignored.
     ///
     /// @param machineIndexes  The list of indexes to remove from the machine array.
     function pruneMachine(uint256[] calldata machineIndexes) public onlyOwner {
         for (uint256 i = 0; i < machineIndexes.length; i++) {
-            if (nfts[lastMappingIndex].addr != address(0)) {
-                machine[machineIndexes[i]] = lastMappingIndex;
-                lastMappingIndex++;                
-            } else {
-                machine[machineIndexes[i]] = 0;
-                totalNftsMachine--;
-            } 
+            machine[machineIndexes[i]] = 0;
+            totalNftsMachine--;
         }        
     }
     
@@ -170,6 +160,11 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         // Extract the nft from the random index
         NFT memory nft = nfts[machine[randomIdx]];
 
+        /*
+        machine[randomIdx] = nfts[lastMappingIndex].addr != address(0)
+            ? lastMappingIndex++ 
+                : 0;       
+        */
         // Load the machine with the next nft mapping index or zero        
         if (nfts[lastMappingIndex].addr != address(0)) {
             machine[randomIdx] = lastMappingIndex;
@@ -198,10 +193,37 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
             // Transfer was a success, distribution completed!
             emit NewDistribution(nft.addr, nft.id, msg.sender, price);
         }
+        
+        /*
+        // Transfer the NFT from the contract to the new recipient
+        if (isERC1155(nft.addr)) {
+            try IERC1155(nft.addr).safeTransferFrom(
+                address(this), 
+                msg.sender,
+                nft.id, 
+                1, 
+                ""
+            ) {
+                // Transfer was a success, distribution completed!
+                emit NewDistribution(nft.addr, nft.id, msg.sender, price);                
+            } catch {
+                // Error, call `pruneMachine` with the `machineIndex` from logs will solve it.
+                revert MustPrune(randomIdx);
+            }
+        } else if (isERC721(nft.addr)) {
+            try IERC721(nft.addr).safeTransferFrom(address(this), msg.sender, nft.id) {
+                // Transfer was a success, distribution completed!
+                emit NewDistribution(nft.addr, nft.id, msg.sender, price);                 
+            } catch {
+                // Error, call `pruneMachine` with the `machineIndex` from logs will solve it.
+                revert MustPrune(randomIdx);
+            }
+        }
+        */
     }
     
     function _getRandomIndex() internal view returns (uint256 randomIdx) {
-        // Get a random index within the range of the total nfts in the machine
+        // Get a random index within the range of the machine length
         randomIdx = uint256(
             keccak256(
                 abi.encodePacked(
@@ -210,7 +232,20 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
                     msg.sender
                 )
             )
-        ) % totalNftsMachine;     
+        ) % totalNftsMachine;//machine.length;
+        
+        /*
+        // If that position in the array is empty (0), add 1 until find non-zero value
+        // the cost of that is lower than rerolling the randomization
+        if (machine[randomIdx] == 0) {
+            for (uint i = 0; i < 69; i++) {
+                randomIdx = machine[i] == 0 ? ++randomIdx : i;
+                if (machine[randomIdx] != 0) {
+                    break;
+                }
+            }
+        } 
+        */      
     }
     
     /// @notice Sets the `price` that must be paid to call the `distributeRandomItem` function.
@@ -224,7 +259,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     // 
     /// @dev It cleans the nft from the machine but does not remove the nft from the nfts mapping,
     ///      the nft could be loaded into the machine and anyone could "win" it but the transaction
-    ///      obv, will fail. Calling `pruneMachine` with the right index will solve it.
+    ///      obv, will fail. Calling `pruneMachine` with the index from the error logs will solve it.
     function emergencyWithdraw(
         address[] calldata tokenAddresses, 
         uint256[] calldata tokenIds
@@ -235,18 +270,12 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
             address tokenAddress = tokenAddresses[i];
             uint256 tokenId = tokenIds[i];
 
-            // Clean or reload the machine
+            // Clean the machine
             for (uint256 j = 0; j < 69; j++) {
                 NFT memory currentNft = nfts[machine[j]];
                 if (currentNft.addr == tokenAddress && currentNft.id == tokenId && machine[j] != 0) {
-                    // Load the machine with the next nft mapping index or zero        
-                    if (nfts[lastMappingIndex].addr != address(0)) {
-                        machine[j] = lastMappingIndex;
-                        lastMappingIndex++;
-                    } else {
-                        machine[j] = 0;
-                        totalNftsMachine--;            
-                    }
+                    machine[j] = 0;
+                    totalNftsMachine--;
                 }
             }
 
@@ -330,5 +359,52 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     ) public virtual override returns (bytes4) {
         return this.onERC1155Received.selector;
     }
-
-} // 0x1b9d13c9acA71363cC0E336D01d9749B831995F3
+/*    
+    /// @dev See {IERC721Receiver-onERC721Received}.
+    ///      Always returns `IERC721Receiver.onERC721Received.selector`.
+    function onERC721Received(
+        address operator, 
+        address from, 
+        uint256 tokenId, 
+        bytes memory
+    ) public virtual override returns (bytes4) {
+        if (from != owner()) revert OwnableUnauthorizedAccount(from);
+        nfts[totalNfts++] = NFT(operator, tokenId);
+        emit NewDeposit(operator, tokenId);
+        return this.onERC721Received.selector;
+    }
+    
+    /// @dev See {IERC165-supportsInterface}.
+    function onERC1155Received(
+        address operator,
+        address from,
+        uint256 id,
+        uint256 value,
+        bytes memory
+    ) public virtual override returns (bytes4) {
+        if (from != owner()) revert OwnableUnauthorizedAccount(from);
+        for (uint i = 0; i < value; i++) {
+            nfts[totalNfts++] = NFT(operator, id);
+        }
+        emit NewDeposit(operator, id);
+        return this.onERC1155Received.selector;
+    }
+    */
+/* no tested, probably useless, uncomment in case of find one
+    /// @dev See {IERC165-supportsInterface}.
+    function onERC1155BatchReceived(
+        address operator,
+        address,
+        uint256[] memory ids,
+        uint256[] memory values,
+        bytes memory
+    ) public virtual override returns (bytes4) {
+        for (uint i = 0; i < ids.length; i++) {
+            for (uint j = 0; j < values[i]; j++) {
+                nfts[totalNfts++] = NFT(operator, ids[i]);
+            }
+        }
+        return this.onERC1155BatchReceived.selector;
+    }
+*/
+} // 0x585077dEa6FBcDEbAA0D405756B7D3645b00e977

@@ -1,4 +1,4 @@
-import { FrameRequest, getFrameMessage, getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
+import { FrameRequest, getFrameMessage, getFrameHtmlResponse, FrameButtonMetadata } from '@coinbase/onchainkit/frame';
 import { NextRequest, NextResponse } from 'next/server';
 import { trim } from 'viem';
 import { getTxDetails } from '../../lib/tx';
@@ -35,24 +35,30 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     } 
   }
   
-  //if (!nft) {}
+  const buttons = (nft ? [
+    {
+      action: 'link',
+      label: 'View artwork',
+      target: `https://testnets.opensea.io/assets/base-sepolia/${trim(nft)}/${trim(tokenId).substring(2)}`
+    },
+    {
+      action: 'link',
+      label: 'View in Explorer',
+      target: `https://sepolia.basescan.org/tx/${body?.untrustedData?.transactionId || ''}`
+    } ] : [
+    {
+      action: 'tx',
+      label: 'Random Mint',
+      target: `${URL}/api/frame`,
+      postUrl: `${URL}/api/tx-success`
+    } 
+  ]) as [FrameButtonMetadata, ...FrameButtonMetadata[]];
   
   return new NextResponse(
     getFrameHtmlResponse({
-      buttons: [
-        {
-          action: 'link',
-          label: 'View artwork',
-          target: `https://testnets.opensea.io/assets/base-sepolia/${trim(nft)}/${trim(tokenId)}`
-        },
-        {
-          action: 'link',
-          label: 'View in Explorer',
-          target: `https://sepolia.basescan.org/tx/${body?.untrustedData?.transactionId || ''}`
-        },
-      ],
+      buttons,
       image: {
-        src: `${URL}/success.jpeg`,
+        src: `${URL}/${nft ? 'success' : 'intro'}.jpeg`,
         aspectRatio: '1:1'
       },
     })
