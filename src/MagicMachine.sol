@@ -23,12 +23,19 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @dev The `owner` may change that `price` with the `setPrice` function.
     uint256 public price = 0.000777 ether;
 
+    enum State {
+        Out,
+        In
+    }
+
     /// @notice A wrapper struct for store the nft data: address and ID.
     struct NFT {
         /// @dev The contract address of the nft.
         address addr;
         /// @dev The tokenId of the nft.
         uint256 id;
+        /// @dev The current state of the nft, IN or OUT contract.
+        State state;
     }
     
     /// @notice A mapping including all nfts deposited in the contract.
@@ -82,7 +89,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
 
             // Transfer the NFT to the contract
             if (isERC1155(tokenAddress)) {
-                nfts[++totalNfts] = NFT(tokenAddress, tokenId);
+                nfts[++totalNfts] = NFT(tokenAddress, tokenId, State.In);
                 IERC1155(tokenAddress).safeTransferFrom(
                     msg.sender, 
                     address(this), 
@@ -92,7 +99,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
                 );
                 emit NewDeposit(tokenAddress, tokenId);
             } else if (isERC721(tokenAddress)) {
-                nfts[++totalNfts] = NFT(tokenAddress, tokenId);
+                nfts[++totalNfts] = NFT(tokenAddress, tokenId, State.In);
                 IERC721(tokenAddress).safeTransferFrom(msg.sender, address(this), tokenId);
                 emit NewDeposit(tokenAddress, tokenId);
             }
@@ -108,7 +115,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @dev The machine has a total size of 69 slots. Empty slots contain the Zero value.
     function loadMachine() public onlyOwner {
         for (uint256 i = 0; i < 69; i++) {
-            if (nfts[lastMappingIndex].addr != address(0) && machine[i] == 0) {
+            if (nfts[lastMappingIndex].state == State.In && machine[i] == 0) {
                 machine[i] = lastMappingIndex;
                 lastMappingIndex++;
                 totalNftsMachine++;
@@ -120,13 +127,16 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     ///
     /// @dev Useful after calling the `resetMachine` function.
     function loadMachineFromIndex(uint256 startingIndex) public onlyOwner {
+        if (totalNftsMachine != 0) revert EmptyMachine();
+        
         for (uint256 i = 0; i < 69; i++) {
-            if (nfts[startingIndex].addr != address(0) && machine[i] == 0) {
+            if (nfts[startingIndex].state == State.In) {
                 machine[i] = startingIndex;
                 totalNftsMachine++;
             }
             startingIndex++;
         }
+        lastMappingIndex = startingIndex;
     }
     
     /// @notice Prune the selected indexes from the Magic Machine.
@@ -137,7 +147,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @param machineIndexes  The list of indexes to remove from the machine array.
     function pruneMachine(uint256[] calldata machineIndexes) public onlyOwner {
         for (uint256 i = 0; i < machineIndexes.length; i++) {
-            if (nfts[lastMappingIndex].addr != address(0)) {
+            if (nfts[lastMappingIndex].state == State.In) {
                 machine[machineIndexes[i]] = lastMappingIndex;
                 lastMappingIndex++;                
             } else {
@@ -149,12 +159,18 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     
     /// @notice Reset ALL indexes from the Magic Machine to the Zero value.
     ///
-    /// @dev First, withdraw ALL nfts from the contract, then call this function.
-    function resetMachine() public onlyOwner {
+    /// @param shouldLoadMachine  When `true`, will reload the machine.
+    ///
+    /// @dev  Useful for hard reloads. Then call the `loadMachineFromIndex`
+    function resetMachine(bool shouldLoadMachine) public onlyOwner {
         totalNftsMachine = 0;    
         for (uint256 i = 0; i < 69; i++) {
             machine[i] = 0;
-        }    
+        }
+    
+        if (shouldLoadMachine) {
+            loadMachineFromIndex(0);
+        }
     }
     
     /// @notice Distributes a random item from the Magic Machine to the sender and 
@@ -162,16 +178,41 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     ///
     /// @dev When there is no more available nfts, the load will be safely ignored.
     function distributeRandomItem() public payable {
-        if(msg.value != price) revert Price();
+        if(msg.value != price) revert Price();   
+        
+        _distributeRandomItem(); 
+    }
+
+    /// @notice Distributes multiple random items from the Magic Machine to the sender and 
+    ///         and reloads the machine. 
+    ///
+    /// @param amount The total amount of random items to be distributed.
+    ///
+    /// @dev When there is no more available nfts, the load will be safely ignored.
+    function distributeRandomItems(uint256 amount) public payable {
+        if(msg.value != price * amount && amount != 0) revert Price(); 
+        
+        for (uint256 i = 0; i < amount; i++) {
+            _distributeRandomItem();
+        }   
+    }
+    
+    /// @notice Distributes a random item from the Magic Machine to the sender and 
+    ///         reloads the machine with the next nft from the mapping.
+    ///
+    /// @dev When there is no more available nfts, the load will be safely ignored.
+    function _distributeRandomItem() internal {
+        //if(msg.value != price) revert Price();
         if(totalNftsMachine == 0) revert EmptyMachine();
         
         uint256 randomIdx = _getRandomIndex();
         
         // Extract the nft from the random index
-        NFT memory nft = nfts[machine[randomIdx]];
+        NFT storage nft = nfts[machine[randomIdx]];
+        nft.state = State.Out;
 
         // Load the machine with the next nft mapping index or zero        
-        if (nfts[lastMappingIndex].addr != address(0)) {
+        if (nfts[lastMappingIndex].state == State.In) {
             machine[randomIdx] = lastMappingIndex;
             lastMappingIndex++;
         } else {
@@ -240,7 +281,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
                 NFT memory currentNft = nfts[machine[j]];
                 if (currentNft.addr == tokenAddress && currentNft.id == tokenId && machine[j] != 0) {
                     // Load the machine with the next nft mapping index or zero        
-                    if (nfts[lastMappingIndex].addr != address(0)) {
+                    if (nfts[lastMappingIndex].state == State.In) {
                         machine[j] = lastMappingIndex;
                         lastMappingIndex++;
                     } else {
@@ -305,7 +346,14 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
             return true;
         }
         return false;
-    }    
+    }  
+    
+    /// @notice Get the current state of the machine.
+    ///
+    /// @return The current state of the machine array.
+    function getMachine() public view returns(uint[69] memory) {
+        return machine;
+    }
 
     /// @dev See {IERC721Receiver-onERC721Received}.
     ///      Always returns `IERC721Receiver.onERC721Received.selector`.

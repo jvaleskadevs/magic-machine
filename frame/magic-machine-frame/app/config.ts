@@ -14,7 +14,8 @@ type ContractData = {
 // base Sepolia contracts
 export const MACHINE: ContractData = {
   abi: machineAbi,
-  address: '0x1b9d13c9acA71363cC0E336D01d9749B831995F3'
+  address: '0xEFC1d83C9c83433ada878207f4E7690189D17c8C'
 }
 
 export const PRICE = parseEther('0.000777').toString();
+export const MULTIPRICE = (parseEther('0.000777') * BigInt(3)).toString();

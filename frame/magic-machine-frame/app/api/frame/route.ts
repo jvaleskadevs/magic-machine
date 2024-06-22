@@ -7,7 +7,7 @@ import {
 } from '@airstack/frames';
 import { Address, encodeFunctionData, toHex } from 'viem';
 import { baseSepolia } from 'viem/chains';
-import { MACHINE, PRICE, URL } from '../../config';
+import { MACHINE, MULTIPRICE, PRICE, URL } from '../../config';
 import { Errors } from '../../errors';
 
 init(process.env.AIRSTACK_API_KEY ?? '');
@@ -37,6 +37,24 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     };
         
     return NextResponse.json(txData);    
+  } else if (action?.buttonIndex === 2) {
+    const data = encodeFunctionData({
+      abi: MACHINE.abi,
+      functionName: 'distributeRandomItems'
+    });
+    
+    const txData: FrameTransactionResponse = {
+      chainId: `eip155:${baseSepolia.id}`,
+      method: 'eth_sendTransaction',
+      params: {
+        abi: MACHINE.abi,
+        data,
+        to: MACHINE.address,
+        value: MULTIPRICE
+      }
+    };
+        
+    return NextResponse.json(txData);    
   }
  
   const targetUrl = `${URL}/api/frame`;
@@ -45,6 +63,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       {
         action: 'tx',
         label: 'Random Mint',
+        target: targetUrl,
+        postUrl: `${URL}/api/tx-success`
+      },
+      {
+        action: 'tx',
+        label: 'Random Mint x3',
         target: targetUrl,
         postUrl: `${URL}/api/tx-success`
       }

@@ -14,6 +14,12 @@ const frameMetadata = getFrameMetadata({
       label: 'Random Mint',
       target: targetUrl,
       postUrl: `${URL}/api/tx-success`
+    },
+    {
+      action: 'tx',
+      label: 'Random Mint x3',
+      target: targetUrl,
+      postUrl: `${URL}/api/tx-success`
     }
   ],
   image: { 
