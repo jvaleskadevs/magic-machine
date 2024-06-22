@@ -1,6 +1,6 @@
 import { FrameRequest, getFrameMessage, getFrameHtmlResponse, FrameButtonMetadata } from '@coinbase/onchainkit/frame';
 import { NextRequest, NextResponse } from 'next/server';
-import { trim, hexToString } from 'viem';
+import { trim, hexToBigInt } from 'viem';
 import { getTxDetails } from '../../lib/tx';
 import { MACHINE, URL } from '../../config';
 
@@ -25,7 +25,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     if (logs[i].address === MACHINE.address.toLowerCase()) {
       const events = logs[i]?.topics ?? [];
       nft = trim(events?.[1] ?? '0x') as `0x${string}`;
-      tokenId = hexToString(trim(events?.[2] ?? '0x')) as `0x${string}`;
+      tokenId = hexToBigInt(events?.[2] ?? '0x').toString() as `0x${string}`;
     } 
   }
   
