@@ -150,10 +150,11 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
             if (nfts[lastMappingIndex].state == State.In) {
                 machine[machineIndexes[i]] = lastMappingIndex;
                 lastMappingIndex++;                
+            } else if (totalNftsMachine != 0) {
+                machine[machineIndexes[i]] = machine[--totalNftsMachine];
             } else {
                 machine[machineIndexes[i]] = 0;
-                totalNftsMachine--;
-            } 
+            }
         }        
     }
     
@@ -211,13 +212,14 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         NFT storage nft = nfts[machine[randomIdx]];
         nft.state = State.Out;
 
-        // Load the machine with the next nft mapping index or zero        
+        // Load the machine with next nft mapping or last machine index        
         if (nfts[lastMappingIndex].state == State.In) {
             machine[randomIdx] = lastMappingIndex;
             lastMappingIndex++;
+        } else if (totalNftsMachine != 0) {
+            machine[randomIdx] = machine[--totalNftsMachine];
         } else {
             machine[randomIdx] = 0;
-            totalNftsMachine--;            
         }
 
 
@@ -284,9 +286,10 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
                     if (nfts[lastMappingIndex].state == State.In) {
                         machine[j] = lastMappingIndex;
                         lastMappingIndex++;
+                    } else if (totalNftsMachine != 0) {
+                        machine[j] = machine[--totalNftsMachine];
                     } else {
                         machine[j] = 0;
-                        totalNftsMachine--;            
                     }
                 }
             }

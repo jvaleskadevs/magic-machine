@@ -10,7 +10,7 @@ contract PruneMachineScript is Script {
     }
 
     function run() public {
-        address machineAddress = address(0x1b9d13c9acA71363cC0E336D01d9749B831995F3);
+        address machineAddress = address(0xEFC1d83C9c83433ada878207f4E7690189D17c8C);
         address deployer = address(0xA9fD03e154e1B3Cbe88F1b515E7EbDAb2d640b60);
     
         MagicMachine mm = MagicMachine(machineAddress);
