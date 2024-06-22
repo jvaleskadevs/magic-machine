@@ -40,7 +40,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   } else if (action?.buttonIndex === 2) {
     const data = encodeFunctionData({
       abi: MACHINE.abi,
-      functionName: 'distributeRandomItems'
+      functionName: 'distributeRandomItems',
+      args: [MULTIAMOUNT]
     });
     
     const txData: FrameTransactionResponse = {
@@ -50,8 +51,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         abi: MACHINE.abi,
         data,
         to: MACHINE.address,
-        value: MULTIPRICE,
-        args: [MULTIAMOUNT]
+        value: MULTIPRICE
       }
     };
         
