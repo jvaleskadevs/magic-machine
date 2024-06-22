@@ -25,7 +25,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     if (logs[i].address === MACHINE.address.toLowerCase()) {
       const events = logs[i]?.topics ?? [];
       nft = trim(events?.[1] ?? '0x') as `0x${string}`;
-      tokenId = hexToString(events?.[2] ?? '0x') as `0x${string}`;
+      tokenId = hexToString(trim(events?.[2] ?? '0x')) as `0x${string}`;
     } 
   }
   
