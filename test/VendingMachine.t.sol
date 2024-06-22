@@ -77,14 +77,14 @@ contract MagicMachineTest is Test, ERC721Holder, ERC1155Holder {
         assertEq(mm.totalNfts(), 8);
         
         //mm.loadMachine(true);
-        assertEq(mm.machine(1), 1);
+        assertEq(mm.machine(0), 1);
         
-        mm.distributeRandomItem{value: 0.01 ether}();
+        mm.distributeRandomItem{value: mm.price()}();
         
-        assertEq(mm.lastMappingIndex(), 8);
+        assertEq(mm.lastMappingIndex(), 9);
         
         mm.withdraw(address(0x420));
-        assertEq(address(0x420).balance, 0.01 ether);
+        assertEq(address(0x420).balance, mm.price());
     }
     
     function test_DepositDistributeDepositReloadTrue() public {
@@ -126,9 +126,9 @@ contract MagicMachineTest is Test, ERC721Holder, ERC1155Holder {
         assertEq(mm.totalNfts(), 8);
         
         //mm.loadMachine(true);
-        assertEq(mm.machine(1), 1);
+        assertEq(mm.machine(0), 1);
         
-        mm.distributeRandomItem{value: 0.01 ether}();
+        mm.distributeRandomItem{value: mm.price()}();
         
         ////////////////////////////////////
         
@@ -142,9 +142,9 @@ contract MagicMachineTest is Test, ERC721Holder, ERC1155Holder {
         nft2.approve(address(mm), 2);
         
         mm.deposit(addresses1, tokenIds1, true);
-        mm.distributeRandomItem{value: 0.01 ether}();
+        mm.distributeRandomItem{value: mm.price()}();
                 
-        assertEq(mm.lastMappingIndex(), 10);
+        assertEq(mm.lastMappingIndex(), 11);
     }    
     
     function test_DepositDistributeDepositReloadFalse() public {
@@ -186,9 +186,9 @@ contract MagicMachineTest is Test, ERC721Holder, ERC1155Holder {
         assertEq(mm.totalNfts(), 8);
         
         //mm.loadMachine(true);
-        assertEq(mm.machine(1), 1);
+        assertEq(mm.machine(0), 1);
         
-        mm.distributeRandomItem{value: 0.01 ether}();
+        mm.distributeRandomItem{value: mm.price()}();
         
         ////////////////////////////////////
         
@@ -202,9 +202,9 @@ contract MagicMachineTest is Test, ERC721Holder, ERC1155Holder {
         nft2.approve(address(mm), 2);
         
         mm.deposit(addresses1, tokenIds1, false);
-        mm.distributeRandomItem{value: 0.01 ether}();
+        mm.distributeRandomItem{value: mm.price()}();
                 
-        assertEq(mm.lastMappingIndex(), 9);
+        assertEq(mm.lastMappingIndex(), 10);
     } 
     
     function test_DepositEmergencyWithdraw() public {
@@ -245,11 +245,11 @@ contract MagicMachineTest is Test, ERC721Holder, ERC1155Holder {
         assertEq(mm.totalNfts(), 8);
         
         //mm.loadMachine(true);
-        assertEq(mm.machine(1), 1);
+        assertEq(mm.machine(0), 1);
         
-        //mm.distributeRandomItem{value: 0.01 ether}();
+        //mm.distributeRandomItem{value: mm.price()}();
         
-        assertEq(mm.lastMappingIndex(), 8);
+        assertEq(mm.lastMappingIndex(), 9);
         
         mm.emergencyWithdraw(addresses, tokenIds);
         assertEq(nft.balanceOf(address(this)), 3);
@@ -295,13 +295,13 @@ contract MagicMachineTest is Test, ERC721Holder, ERC1155Holder {
         assertEq(mm.totalNfts(), 8);
         
         mm.loadMachine();
-        assertEq(mm.machine(1), 1);
+        assertEq(mm.machine(0), 1);
         
-        mm.distributeRandomItem{value: 0.01 ether}();
+        mm.distributeRandomItem{value: mm.price()}();
         
-        assertEq(mm.lastMappingIndex(), 8);
+        assertEq(mm.lastMappingIndex(), 9);
         
         mm.withdraw(address(0x420));
-        assertEq(address(0x420).balance, 0.01 ether);
+        assertEq(address(0x420).balance,mm.price());
     }
 }

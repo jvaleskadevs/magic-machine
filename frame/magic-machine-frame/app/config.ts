@@ -18,4 +18,6 @@ export const MACHINE: ContractData = {
 }
 
 export const PRICE = parseEther('0.000777').toString();
-export const MULTIPRICE = (parseEther('0.000777') * BigInt(3)).toString();
+export const MULTIAMOUNT = BigInt(3);
+export const MULTIPRICE = (parseEther('0.000777') * MULTIAMOUNT).toString();
+

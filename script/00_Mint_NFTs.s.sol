@@ -12,7 +12,7 @@ contract MintNFTsScript is Script {
     }
 
     function run() public {
-        address machineAddress = address(0x1b9d13c9acA71363cC0E336D01d9749B831995F3);
+        address machineAddress = address(0xEFC1d83C9c83433ada878207f4E7690189D17c8C);
         //address nftAddress = address(0x1A77fc9E7F2b95399497dCDBE82a030B9F05a9aD);
         address deployer = address(0x26281BB0b775A59Db0538b555f161E8F364fd21e);
     
@@ -29,8 +29,6 @@ contract MintNFTsScript is Script {
             nft.safeMint(deployer, "");
             nft.approve(machineAddress, i);
             nft1155.mint(deployer, i, 1, "");
-            
-            //nft.safeTransferFrom(address(0x26281BB0b775A59Db0538b555f161E8F364fd21e), address(0x1b8B03327D0a2b2e222BCE579664311617f013d7), i);
 
             addresses[i] = address(nft);
             addresses[i+22] = address(nft1155);

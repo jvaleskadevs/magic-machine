@@ -7,7 +7,7 @@ import {
 } from '@airstack/frames';
 import { Address, encodeFunctionData, toHex } from 'viem';
 import { baseSepolia } from 'viem/chains';
-import { MACHINE, MULTIPRICE, PRICE, URL } from '../../config';
+import { MACHINE, MULTIPRICE, MULTIAMOUNT, PRICE, URL } from '../../config';
 import { Errors } from '../../errors';
 
 init(process.env.AIRSTACK_API_KEY ?? '');
@@ -50,7 +50,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         abi: MACHINE.abi,
         data,
         to: MACHINE.address,
-        value: MULTIPRICE
+        value: MULTIPRICE,
+        args: [MULTIAMOUNT]
       }
     };
         
