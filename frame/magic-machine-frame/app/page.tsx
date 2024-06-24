@@ -5,21 +5,21 @@ import { URL } from './config';
 const title = 'Magic Machine';
 const description = 'Magic Machine';
 const image = `${URL}/intro.jpeg`;
-const targetUrl = `${URL}/api/frame`;
+const targetUrl = `${URL}/api/frame/payments`;
 
 const frameMetadata = getFrameMetadata({
   buttons: [
     {
-      action: 'tx',
+      //action: 'tx',
       label: 'Random Mint',
       target: targetUrl,
-      postUrl: `${URL}/api/tx-success`
+      //postUrl: `${URL}/api/tx-success`
     },
     {
-      action: 'tx',
+      //action: 'tx',
       label: 'Random Mint x3',
       target: targetUrl,
-      postUrl: `${URL}/api/tx-success`
+      //postUrl: `${URL}/api/tx-success`
     }
   ],
   image: { 
