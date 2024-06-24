@@ -78,7 +78,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const data = encodeFunctionData({
     abi: MACHINE.abi,
     functionName: functionName,
-    args: [args]
+    args: args ? [args] : undefined
   });
   
   const txData: FrameTransactionResponse = {

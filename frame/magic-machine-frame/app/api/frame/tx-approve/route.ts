@@ -61,7 +61,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
  
   const data = encodeFunctionData({
-    abi: MACHINE.abi,
+    abi: DEGEN.abi,
     functionName: 'approve',
     args: [MACHINE.address, amount]
   });
