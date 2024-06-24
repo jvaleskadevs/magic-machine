@@ -20,12 +20,12 @@ export const MACHINE: ContractData = {
 
 export const DEGEN: ContractData = {
   abi: erc20Abi,
-  address: '0x'
+  address: '0xc040682FC521F5A89968F9E1101D72539BBC9d7c' // 0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed
 }
 
 export const TN100X: ContractData = {
   abi: erc20Abi,
-  address: '0x'
+  address: '0xc040682FC521F5A89968F9E1101D72539BBC9d7c' // 0x5B5dee44552546ECEA05EDeA01DCD7Be7aa6144A
 }
 
 export const PRICE = parseEther('0.000777').toString();
