@@ -34,31 +34,34 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log(state);  
 
  
-  let functionName = ''; 
   let to: `0x${string}` = '0x';
-  let amount = '0';
-  switch (state?.payment ?? 0) {
+  let amount = BigInt(0);
+  switch (state?.payment) {
     case 0:
       break;
     case 1:
       to = DEGEN.address;
       if (state?.amount === 1) {
-        amount = DEGEN_PRICE.toString();
+        amount = DEGEN_PRICE;
       } else if (state?.amount === 3) {
-        amount = (DEGEN_PRICE * MULTIAMOUNT).toString();     
+        amount = DEGEN_PRICE * MULTIAMOUNT;     
       }
       break;
     case 2:
       to = TN100X.address;
       if (state?.amount === 1) {
-        amount = TN100X_PRICE.toString();
+        amount = TN100X_PRICE;
       } else if (state?.amount === 3) {
-        amount = (TN100X_PRICE * MULTIAMOUNT).toString();       
+        amount = TN100X_PRICE * MULTIAMOUNT;       
       }
       break;
     default:
       break;    
   }
+  
+  if (to === '0x' || !amount) return new NextResponse(Errors.NoValidMessage);
+  console.log(to);
+  console.log(amount);
  
   const data = encodeFunctionData({
     abi: DEGEN.abi,
