@@ -5,7 +5,7 @@ import { URL } from './config';
 const title = 'Magic Machine';
 const description = 'Magic Machine';
 const image = `${URL}/intro.jpeg`;
-const targetUrl = `${URL}/api/frame/payments`;
+const targetUrl = `${URL}/api/frame/payment`;
 
 const frameMetadata = getFrameMetadata({
   buttons: [
