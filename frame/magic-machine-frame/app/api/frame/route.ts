@@ -16,7 +16,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const body: ValidateFramesMessageInput = await req.json();
   const { isValid, message } = await validateFramesMessage(body);
   if (!isValid) return new NextResponse(Errors.NoValidMessage);
-
+/*
   const action = message?.data?.frameActionBody || undefined;
  
   if (action?.buttonIndex === 1) {
@@ -57,21 +57,21 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         
     return NextResponse.json(txData);    
   }
- 
-  const targetUrl = `${URL}/api/frame`;
+*/ 
+  const targetUrl = `${URL}/api/frame/payment`;
   return new NextResponse(getFrameHtmlResponse({
     buttons: [
       {
-        action: 'tx',
+        //action: 'tx',
         label: 'Random Mint',
         target: targetUrl,
-        postUrl: `${URL}/api/tx-success`
+        //postUrl: `${URL}/api/tx-success`
       },
       {
-        action: 'tx',
+        //action: 'tx',
         label: 'Random Mint x3',
         target: targetUrl,
-        postUrl: `${URL}/api/tx-success`
+        //postUrl: `${URL}/api/tx-success`
       }
     ],
     image: {

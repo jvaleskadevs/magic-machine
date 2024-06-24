@@ -20,26 +20,8 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {    
     /// @notice That amount of ether must be paid before every random distribution.
     ///
-    /// @dev The `owner` may change that `price` with the `setPrices` function.
+    /// @dev The `owner` may change that `price` with the `setPrice` function.
     uint256 public price = 0.000777 ether;
-    /// @notice That amount of DEGEN must be paid before every random distribution.
-    ///
-    /// @dev The `owner` may change that `price` with the `setPrices` function.    
-    uint256 public degenPrice = 420 ether;
-    /// @notice That amount of TN100X must be paid before every random distribution.
-    ///
-    /// @dev The `owner` may change that `price` with the `setPrices` function.    
-    uint256 public tn100xPrice = 420 ether;
-    
-    /// @notice The address of the DEGEN token.
-    address public immutable DEGEN = 0xc040682FC521F5A89968F9E1101D72539BBC9d7c;//0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed;
-    /// @notice The interface of the DEGEN token.
-    IERC20 private immutable IDEGEN;
-    
-    /// @notice The address of the TN100X token.
-    address public immutable TN100X = 0xc040682FC521F5A89968F9E1101D72539BBC9d7c;//0x5B5dee44552546ECEA05EDeA01DCD7Be7aa6144A;
-    /// @notice The interface of the TN100X token.
-    IERC20 private immutable ITN100X;
 
     /// @notice An enum for the nft states: in or out.
     ///
@@ -88,11 +70,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @notice Emitted after a successful withdraw of an nft from the contract.
     event NewWithdrawal(address indexed nft, uint256 id);
     
-    constructor() Ownable(msg.sender) {
-        // init interfaces to save users gas
-        IDEGEN = IERC20(DEGEN);
-        ITN100X = IERC20(TN100X);
-    }
+    constructor() Ownable(msg.sender) {}
 
     /// @notice Deposits multiple NFTs into the Magic Machine contract.
     ///
@@ -208,27 +186,6 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         
         _distributeRandomItem(); 
     }
-    
-    
-    /// @notice Distributes a random item from the Magic Machine. Accept DEGEN as payment.
-    ///
-    /// @dev When there is no more available nfts, the load will be safely ignored.
-    function distributeRandomItemDegen() public payable {
-        bool success = IDEGEN.transferFrom(msg.sender, address(this), degenPrice);
-        if (!success) revert Price();
-        
-        _distributeRandomItem(); 
-    }
-    
-    /// @notice Distributes a random item from the Magic Machine. Accept TN100X as payment.
-    ///
-    /// @dev When there is no more available nfts, the load will be safely ignored.
-    function distributeRandomItemTN100x() public payable {
-        bool success = ITN100X.transferFrom(msg.sender, address(this), tn100xPrice);
-        if (!success) revert Price();
-        
-        _distributeRandomItem(); 
-    }
 
     /// @notice Distributes multiple random items from the Magic Machine to the sender and 
     ///         and reloads the machine. 
@@ -238,36 +195,6 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @dev When there is no more available nfts, the load will be safely ignored.
     function distributeRandomItems(uint256 amount) public payable {
         if(msg.value != price * amount && amount != 0) revert Price(); 
-        
-        for (uint256 i = 0; i < amount; i++) {
-            _distributeRandomItem();
-        }   
-    }
-    
-    /// @notice Distributes multiple random items from the Magic Machine to the sender and 
-    ///         and reloads the machine. Accepts DEGEN as payment.
-    ///
-    /// @param amount The total amount of random items to be distributed.
-    ///
-    /// @dev When there is no more available nfts, the load will be safely ignored.
-    function distributeRandomItemsDegen(uint256 amount) public payable {
-        bool success = IDEGEN.transferFrom(msg.sender, address(this), degenPrice * amount);
-        if (!success) revert Price();
-        
-        for (uint256 i = 0; i < amount; i++) {
-            _distributeRandomItem();
-        }   
-    }
-    
-    /// @notice Distributes multiple random items from the Magic Machine to the sender and 
-    ///         and reloads the machine. Accepts TN100x as payment.
-    ///
-    /// @param amount The total amount of random items to be distributed.
-    ///
-    /// @dev When there is no more available nfts, the load will be safely ignored.
-    function distributeRandomItemsTN100x(uint256 amount) public payable {
-        bool success = ITN100X.transferFrom(msg.sender, address(this), tn100xPrice * amount);
-        if (!success) revert Price();
         
         for (uint256 i = 0; i < amount; i++) {
             _distributeRandomItem();
@@ -332,15 +259,11 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         ) % totalNftsMachine;     
     }
     
-    /// @notice Sets the prices that must be paid to call the `distributeRandomItem` functions.
+    /// @notice Sets the `price` that must be paid to call the `distributeRandomItem` function.
     /// 
-    /// @param newPrice The amount of ether for setting as the `price` or Zero.
-    /// @param newPrice The amount of DEGEN for setting as the `degenPrice` or Zero.
-    /// @param newPrice The amount of TN100X for setting as the `tn100xPrice` or Zero.
-    function setPrices(uint256 newPrice, uint256 newDegenPrice, uint256 newTn100xPrice) public onlyOwner {
-        price = newPrice != 0 ? newPrice : price;
-        degenPrice = newDegenPrice != 0 ? newDegenPrice : degenPrice;
-        tn100xPrice = newTn100xPrice != 0 ? newTn100xPrice : tn100xPrice;
+    /// @param newPrice The amount of ether for setting as the `price`.
+    function setPrice(uint256 newPrice) public onlyOwner {
+        price = newPrice;
     }
     
     /// @notice Withdraw multiple NFTs, only for emergencies. Migration, locked nfts..
@@ -383,32 +306,23 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
                     1, 
                     ""
                 );
-                emit NewWithdrawal(tokenAddress, tokenId);
             } else if (isERC721(tokenAddress)) {
                 IERC721(tokenAddress).safeTransferFrom(address(this), msg.sender, tokenId);
-                emit NewWithdrawal(tokenAddress, tokenId);
+            } else {
+                IERC20 i20 = IERC20(tokenAddress);
+                i20.transferFrom(address(this), msg.sender, i20.balanceOf(address(this)));
             }
+            
+            emit NewWithdrawal(tokenAddress, tokenId);
         }
     }
     
     /// @notice Withdraw all the ether from the contract. 
     ///
-    /// @param to The address of the recipient to send the ether to.
+    /// @param to The address of the recipient.
     function withdraw(address to) public onlyOwner {
         if (to == address(0)) revert ZeroAddress();
         (bool success, ) = payable(to).call{value: address(this).balance}(""); 
-        if (!success) revert Withdrawal();
-    }
-    
-    
-    /// @notice Withdraw any erc20 token from the contract. 
-    ///
-    /// @param to The address of the token to withdraw.
-    /// @param to The address of the recipient to send the token to.
-    function withdrawToken(address token, address to) public onlyOwner {
-        if (to == address(0)) revert ZeroAddress();
-        IERC20 i20 = IERC20(token);
-        bool success = i20.transferFrom(address(this), msg.sender, i20.balanceOf(address(this)));
         if (!success) revert Withdrawal();
     }
     
