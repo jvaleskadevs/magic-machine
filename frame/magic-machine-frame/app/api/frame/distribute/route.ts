@@ -17,12 +17,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   if (!isValid) return new NextResponse(Errors.NoValidMessage);
 
   const action = message?.data?.frameActionBody || undefined;
-  
-  const payment = action?.buttonIndex === 1 
-    ? 0 : action?.buttonIndex === 2 
-      ? 1 : action?.buttonIndex === 3 
-        ? 2 : 0;
-        
+ 
   // deserialize state
   const stateStr: any = fromBytes((action?.state ?? []) as Uint8Array, 'string');
   //?? '{"data":"empty"}';
@@ -34,7 +29,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       console.log(err);
     }
   }
-  console.log(state);
+  console.log(state); 
+  
+  const payment = state?.payment ?? action?.buttonIndex === 1 
+    ? 0 : action?.buttonIndex === 2 
+      ? 1 : action?.buttonIndex === 3 
+        ? 2 : 0;        
   
   const targetApprove = `${URL}/api/frame/tx-approve`;
   const targetDistribute = `${URL}/api/frame/tx-distribute`;
