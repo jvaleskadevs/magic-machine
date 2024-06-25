@@ -29,16 +29,17 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       console.log(err);
     }
   }
-  console.log(state); 
-  
-  
+  console.log(state);
   
   const amount = req.nextUrl.searchParams.get('amount') ?? state?.amount ?? 1;
-  const payment = req.nextUrl.searchParams.get('amount') ?? state?.payment ?? 
+  const payment = req.nextUrl.searchParams.get('payment') ?? state?.payment ?? 
     action?.buttonIndex === 1 
       ? 0 : action?.buttonIndex === 2 
         ? 1 : action?.buttonIndex === 3 
           ? 2 : 0;        
+  
+  console.log(amount);
+  console.log(payment);
   
   const targetApprove = `${URL}/api/frame/tx-approve`;
   const targetDistribute = `${URL}/api/frame/tx-distribute`;
@@ -63,8 +64,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     },
     postUrl: `${URL}/api/frame/distribute?amount=${amount}&payment=${payment}`,
     state: {
-      amount,
-      payment
+      amount: typeof amount === 'string' ? (parseInt(amount) ?? '1') : '1',
+      payment: typeof payment === 'string' ? (parseInt(payment) ?? '0') : '0',
     }
   }));  
 }
