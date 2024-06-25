@@ -32,12 +32,12 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     uint256 public tn100xPrice = 420 ether;
     
     /// @notice The address of the DEGEN token.
-    address public immutable DEGEN = 0xc040682FC521F5A89968F9E1101D72539BBC9d7c;//0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed;
+    address public immutable DEGEN = 0x012e2725400D3480D9Bc6E71cB36e07CE094ef62;//0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed;
     /// @notice The interface of the DEGEN token.
     IERC20 private immutable IDEGEN;
     
     /// @notice The address of the TN100X token.
-    address public immutable TN100X = 0xc040682FC521F5A89968F9E1101D72539BBC9d7c;//0x5B5dee44552546ECEA05EDeA01DCD7Be7aa6144A;
+    address public immutable TN100X = 0x012e2725400D3480D9Bc6E71cB36e07CE094ef62;//0x5B5dee44552546ECEA05EDeA01DCD7Be7aa6144A;
     /// @notice The interface of the TN100X token.
     IERC20 private immutable ITN100X;
 
