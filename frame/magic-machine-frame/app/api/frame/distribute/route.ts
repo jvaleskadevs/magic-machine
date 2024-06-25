@@ -31,14 +31,19 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
   console.log(state);
   
-  const amount = req.nextUrl.searchParams.get('amount') ?? state?.amount ?? 1;
-  const payment = req.nextUrl.searchParams.get('payment') ?? state?.payment ?? 
-    action?.buttonIndex === 1 
+  let amount = parseInt(req.nextUrl.searchParams.get('amount') ?? '') ?? undefined;
+  console.log(amount);
+  if (!amount) amount = state?.amount ?? 1;
+  console.log(amount);
+  
+  let payment = parseInt(req.nextUrl.searchParams.get('payment') ?? '') ?? undefined;
+  console.log(payment);
+  if (!payment) payment = state?.payment ?? undefined;  
+  console.log(payment);
+  if (!payment) payment = action?.buttonIndex === 1 
       ? 0 : action?.buttonIndex === 2 
         ? 1 : action?.buttonIndex === 3 
-          ? 2 : 0;        
-  
-  console.log(amount);
+          ? 2 : 0;
   console.log(payment);
   
   const targetApprove = `${URL}/api/frame/tx-approve`;
