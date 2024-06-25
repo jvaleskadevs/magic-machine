@@ -36,7 +36,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   let functionName = ''; 
   let price = '0';
   let args;
-  switch (state?.payment ?? 0) {
+  switch (state?.payment) {
     case 0:
       if (state?.amount === 1) {
         functionName = 'distributeRandomItem';
@@ -74,6 +74,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       }
       break;    
   }
+  console.log(functionName);
+  console.log(price);
+  console.log(args);
  
   const data = encodeFunctionData({
     abi: MACHINE.abi,
