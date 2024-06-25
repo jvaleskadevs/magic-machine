@@ -64,8 +64,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     },
     postUrl: `${URL}/api/frame/distribute?amount=${amount}&payment=${payment}`,
     state: {
-      amount: typeof amount === 'string' ? (parseInt(amount) ?? '1') : '1',
-      payment: typeof payment === 'string' ? (parseInt(payment) ?? '0') : '0',
+      amount: typeof amount === 'string' ? (parseInt(amount) ?? '1') : amount ?? 1,
+      payment: typeof payment === 'string' ? (parseInt(payment) ?? '0') : payment ?? 0,
     }
   }));  
 }
