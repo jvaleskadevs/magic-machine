@@ -15,7 +15,7 @@ type ContractData = {
 // base Sepolia contracts
 export const MACHINE: ContractData = {
   abi: machineAbi,
-  address: '0x2ACDEe0636B57961f007ac74EfFCb76ad60A33D4'//'0xe9c39E6A0e083A4cF823b19d6304EB2B4A273B75'
+  address: '0xf42d8aa36a328ef5a44D37ae9B035Aa5BE47764a'//'0xe9c39E6A0e083A4cF823b19d6304EB2B4A273B75'
 }
 
 export const DEGEN: ContractData = {

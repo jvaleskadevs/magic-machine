@@ -10,21 +10,17 @@ contract PruneMachineScript is Script {
     }
 
     function run() public {
-        address machineAddress = address(0x2ACDEe0636B57961f007ac74EfFCb76ad60A33D4);
+        address machineAddress = address(0xf42d8aa36a328ef5a44D37ae9B035Aa5BE47764a);
         address deployer = address(0xA9fD03e154e1B3Cbe88F1b515E7EbDAb2d640b60);
     
         MagicMachine mm = MagicMachine(machineAddress);
     
-        uint256[] memory indexes = new uint256[](1);
-        indexes[0] = 1;
-    
-        vm.startBroadcast(vm.envUint("PK"));
+        //vm.startBroadcast(vm.envUint("PK"));
         
-        //mm.pruneMachine(indexes);
-        mm.withdraw(deployer);
-        //mm.distributeRandomItem{value: mm.price()}();
-        //mm.distributeRandomItem{value: mm.price()}();
-        //mm.distributeRandomItem{value: mm.price()}();
+        console.log(mm.lastMappingIndex());
+        console.log(mm.totalNfts());
+        console.log(mm.totalNftsMachine());
+        
         for (uint i = 0; i < 69; i++) {
             console.log(mm.machine(i));
         }

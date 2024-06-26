@@ -139,11 +139,20 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     ///
     /// @dev The machine has a total size of 69 slots. Empty slots contain the Zero value.
     function loadMachine() public onlyOwner {
+        /*
         for (uint256 i = 0; i < 69; i++) {
             if (nfts[lastMappingIndex].state == State.In && machine[i] == 0) {
                 machine[i] = lastMappingIndex;
                 lastMappingIndex++;
                 totalNftsMachine++;
+            }
+        }
+        */
+        for (uint256 i = lastMappingIndex; i < lastMappingIndex + 69; i++) {
+            if (nfts[i].state == State.In) {
+                machine[totalNftsMachine] = i;
+                totalNftsMachine++;
+                lastMappingIndex = i + 1;
             }
         }
     }
@@ -154,14 +163,13 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     function loadMachineFromIndex(uint256 startingIndex) public onlyOwner {
         if (totalNftsMachine != 0) revert EmptyMachine();
         
-        for (uint256 i = 0; i < 69; i++) {
-            if (nfts[startingIndex].state == State.In) {
-                machine[i] = startingIndex;
+        for (uint256 i = startingIndex; i < startingIndex + 69; i++) {                
+            if (nfts[i].state == State.In) {
+                machine[totalNftsMachine] = i;
                 totalNftsMachine++;
+                lastMappingIndex = i + 1;
             }
-            startingIndex++;
-        }
-        lastMappingIndex = startingIndex;
+        }        
     }
     
     /// @notice Prune the selected indexes from the Magic Machine.
