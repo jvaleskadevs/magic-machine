@@ -69,9 +69,10 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     args: [MACHINE.address, amount]
   });
   
-  const txData: FrameTransactionResponse = {
+  const txData: FrameTransactionResponse & { attribution: boolean } = {
     chainId: `eip155:${baseSepolia.id}`,
     method: 'eth_sendTransaction',
+    attribution: false,
     params: {
       abi: DEGEN.abi,
       data,
