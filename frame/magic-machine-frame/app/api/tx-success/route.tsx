@@ -46,10 +46,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       target: `https://sepolia.basescan.org/tx/${body?.untrustedData?.transactionId || ''}`
     } ] as [FrameButtonMetadata, ...FrameButtonMetadata[]] : [
     {
-      action: 'tx',
-      label: 'Random Mint',
-      target: `${URL}/api/frame`,
-      postUrl: `${URL}/api/tx-success`
+      label: 'Try again',
+      target: `${URL}/api/frame`
     } 
   ] as [FrameButtonMetadata, ...FrameButtonMetadata[]];
   
