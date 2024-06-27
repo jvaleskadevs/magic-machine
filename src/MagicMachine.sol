@@ -32,12 +32,12 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     uint256 public tn100xPrice = 420 ether;
     
     /// @notice The address of the DEGEN token.
-    address public immutable DEGEN = 0xc248c157Ab73C1d71927626FaB0F01Ce58811ddd;//0x012e2725400D3480D9Bc6E71cB36e07CE094ef62;//0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed;
+    address public immutable DEGEN = 0x012e2725400D3480D9Bc6E71cB36e07CE094ef62;//0xc248c157Ab73C1d71927626FaB0F01Ce58811ddd;//0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed;
     /// @notice The interface of the DEGEN token.
     IERC20 private immutable IDEGEN;
     
     /// @notice The address of the TN100X token.
-    address public immutable TN100X = 0xc248c157Ab73C1d71927626FaB0F01Ce58811ddd;//0x012e2725400D3480D9Bc6E71cB36e07CE094ef62;//0x5B5dee44552546ECEA05EDeA01DCD7Be7aa6144A;
+    address public immutable TN100X = 0x012e2725400D3480D9Bc6E71cB36e07CE094ef62;//0xc248c157Ab73C1d71927626FaB0F01Ce58811ddd;//0x5B5dee44552546ECEA05EDeA01DCD7Be7aa6144A;
     /// @notice The interface of the TN100X token.
     IERC20 private immutable ITN100X;
 
@@ -302,6 +302,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
             lastMappingIndex++;
         } else if (totalNftsMachine != 0) {
             machine[randomIdx] = machine[--totalNftsMachine];
+            machine[totalNftsMachine] = 0;
         } else {
             machine[randomIdx] = 0;
         }

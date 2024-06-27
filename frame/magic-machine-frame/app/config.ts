@@ -15,7 +15,7 @@ type ContractData = {
 // base Sepolia contracts
 export const MACHINE: ContractData = {
   abi: machineAbi,
-  address: '0xf42d8aa36a328ef5a44D37ae9B035Aa5BE47764a'//'0xe9c39E6A0e083A4cF823b19d6304EB2B4A273B75'
+  address: '0xC2f8e346f3C50968358b0f06E77b1F49559f1EBa'//'0xe9c39E6A0e083A4cF823b19d6304EB2B4A273B75'
 }
 
 export const MACHINE_ZORA: Address = "0x38529794394959DD2b2db3edDF9b04ed5D407573";

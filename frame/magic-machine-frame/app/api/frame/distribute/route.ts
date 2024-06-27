@@ -55,7 +55,14 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const targetDistribute = `${URL}/api/frame/tx-distribute`;
   
   return new NextResponse(getFrameHtmlResponse({
-    buttons: [
+    buttons: payment === 0 ? [
+      {
+        action: 'tx',
+        label: 'Mint',
+        target: targetDistribute,
+        postUrl: `${URL}/api/tx-success`
+      }    
+    ] : [
       {
         action: 'tx',
         label: 'Approve',
