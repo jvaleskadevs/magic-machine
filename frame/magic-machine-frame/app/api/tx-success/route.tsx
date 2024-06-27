@@ -43,8 +43,13 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     {
       action: 'link',
       label: 'View in Explorer',
-      target: `https://sepolia.basescan.org/tx/${body?.untrustedData?.transactionId || ''}`
-    } ] as [FrameButtonMetadata, ...FrameButtonMetadata[]] : [
+      target: `https://sepolia.basescan.org/tx/${body?.untrustedData?.transactionId || ''}`,
+    },
+    {
+      label: 'Find more art',
+      target: `${URL}/api/frame`
+    }
+  ] as [FrameButtonMetadata, ...FrameButtonMetadata[]] : [
     {
       label: 'Try again',
       target: `${URL}/api/frame`

@@ -11,13 +11,13 @@ const frameMetadata = getFrameMetadata({
   buttons: [
     {
       //action: 'tx',
-      label: 'Random Mint',
+      label: 'Find art',
       target: targetUrl,
       //postUrl: `${URL}/api/tx-success`
     },
     {
       //action: 'tx',
-      label: 'Random Mint x3',
+      label: 'Find art x3',
       target: targetUrl,
       //postUrl: `${URL}/api/tx-success`
     }
