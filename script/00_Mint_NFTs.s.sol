@@ -12,7 +12,7 @@ contract MintNFTsScript is Script {
     }
 
     function run() public {
-        address machineAddress = address(0xf42d8aa36a328ef5a44D37ae9B035Aa5BE47764a);
+        address machineAddress = address(0x38529794394959DD2b2db3edDF9b04ed5D407573);
         //address nftAddress = address(0x2ACDEe0636B57961f007ac74EfFCb76ad60A33D4);
         address deployer = address(0x26281BB0b775A59Db0538b555f161E8F364fd21e);
     

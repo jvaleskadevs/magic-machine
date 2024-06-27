@@ -58,7 +58,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(txData);    
   }
 */ 
-  const targetUrl = `${URL}/api/frame/payment`;
+  const targetUrl = `${URL}/api/frame/chain`;
   return new NextResponse(getFrameHtmlResponse({
     buttons: [
       {

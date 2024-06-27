@@ -55,7 +55,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     getFrameHtmlResponse({
       buttons,
       image: {
-        src: `${URL}/${isSuccess ? 'success' : 'fail'}.jpeg`,
+        src: `${URL}/${isSuccess ? 'success' : 'fail'}.png`,
         aspectRatio: '1:1'
       },
     })

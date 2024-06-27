@@ -5,7 +5,6 @@ import {
   validateFramesMessage,
   ValidateFramesMessageInput
 } from '@airstack/frames';
-import { fromBytes } from "viem";
 import { URL } from '../../../config';
 import { Errors } from '../../../errors';
 
@@ -17,46 +16,27 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   if (!isValid) return new NextResponse(Errors.NoValidMessage);
 
   const action = message?.data?.frameActionBody || undefined;
-  
-  // deserialize state
-  const stateStr: any = fromBytes((action?.state ?? []) as Uint8Array, 'string');
-  //?? '{"data":"empty"}';
-  let state: any;
-  if (stateStr) {
-    try {
-      state = JSON.parse(decodeURIComponent(stateStr.replace(/\+/g,  " ")));
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  console.log(state);
-  
-  const chain = action?.buttonIndex === 1 ? 0 : action?.buttonIndex === 2 ? 1 : 0;
-  const targetUrl = `${URL}/api/frame/distribute`;
+  const amount = action?.buttonIndex === 1 ? 1 : action?.buttonIndex === 2 ? 3 : 0;
+  const targetUrl = `${URL}/api/frame/payment`;
   
   return new NextResponse(getFrameHtmlResponse({
     buttons: [
       {
-        label: 'Ether Ξ',
+        label: 'Base',
         target: targetUrl
       },
       {
-        label: chain === 1 ? 'Enjoy 🔵️' : 'Degen 🎩️',
-        target: targetUrl
-      },
-      {
-        label: chain === 1 ? 'Imagine ‼️' : 'Ham 🍖️',
+        label: 'Zora',
         target: targetUrl
       }
     ],
     image: {
-      src: `${URL}/payment.jpeg`,
+      src: `${URL}/chain.jpeg`,
       aspectRatio: '1:1'
     },
     postUrl: targetUrl,
     state: {
-      amount: state?.amount ?? 1,
-      chain
+      amount
     }
   }));
   

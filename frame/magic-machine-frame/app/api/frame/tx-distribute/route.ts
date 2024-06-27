@@ -6,9 +6,9 @@ import {
   ValidateFramesMessageInput
 } from '@airstack/frames';
 import { Address, encodeFunctionData, toHex } from 'viem';
-import { baseSepolia } from 'viem/chains';
+import { baseSepolia, zoraSepolia } from 'viem/chains';
 import { fromBytes } from 'viem';
-import { MACHINE, MULTIPRICE, MULTIAMOUNT, PRICE, DEGEN_PRICE, TN100X_PRICE, URL } from '../../../config';
+import { MACHINE, MACHINE_ZORA, MULTIPRICE, MULTIAMOUNT, PRICE, DEGEN_PRICE, TN100X_PRICE, URL } from '../../../config';
 import { Errors } from '../../../errors';
 
 init(process.env.AIRSTACK_API_KEY ?? '');
@@ -85,13 +85,13 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   });
   
   const txData: FrameTransactionResponse & { attribution: boolean } = {
-    chainId: `eip155:${baseSepolia.id}`,
+    chainId: `eip155:${state?.chain === 1 ? zoraSepolia.id : baseSepolia.id}`,
     method: 'eth_sendTransaction',
     attribution: false,
     params: {
       abi: MACHINE.abi,
       data,
-      to: MACHINE.address,
+      to: state?.chain === 1 ? MACHINE_ZORA : MACHINE.address,
       value: price
     }
   };
