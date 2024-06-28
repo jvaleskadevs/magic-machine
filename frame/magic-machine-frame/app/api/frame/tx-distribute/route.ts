@@ -1,4 +1,4 @@
-import { getFrameHtmlResponse, FrameTransactionResponse } from '@coinbase/onchainkit/frame';
+import { getFrameHtmlResponse, FrameTransactionResponse, FrameTransactionEthSendParams } from '@coinbase/onchainkit/frame';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   init,
@@ -36,6 +36,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   let functionName = ''; 
   let price = '0';
   let args;
+  let gas = '169420';
   switch (state?.payment) {
     case 0:
       if (state?.amount === 1) {
@@ -45,6 +46,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         functionName = 'distributeRandomItems';
         price = MULTIPRICE;     
         args = [MULTIAMOUNT]; 
+        gas = '469420';
       }
       break;
     case 1:
@@ -52,7 +54,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         functionName = 'distributeRandomItemDegen';
       } else if (state?.amount === 3) {
         functionName = 'distributeRandomItemsDegen';
-        args = [MULTIAMOUNT];   
+        args = [MULTIAMOUNT];  
+        gas = '469420'; 
       }
       break;
     case 2:
@@ -61,6 +64,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       } else if (state?.amount === 3) {
         functionName = 'distributeRandomItemsTN100x';
         args = [MULTIAMOUNT];   
+        gas = '469420';
       }
       break;
     default:
@@ -71,6 +75,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         functionName = 'distributeRandomItems';
         price = MULTIPRICE;   
         args = [MULTIAMOUNT];
+        gas = '469420';
       }
       break;    
   }
@@ -92,8 +97,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       abi: MACHINE.abi,
       data,
       to: state?.chain === 1 ? MACHINE_ZORA : MACHINE.address,
-      value: price
-    }
+      value: price,
+      gas
+    } as FrameTransactionEthSendParams & { gas: string }
   };
       
   return NextResponse.json(txData);

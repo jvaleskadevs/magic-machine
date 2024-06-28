@@ -1,12 +1,12 @@
 import { http, createPublicClient, TransactionReceipt } from 'viem';
-import { baseSepolia } from 'viem/chains';
+import { baseSepolia, zora } from 'viem/chains';
 
-const client = createPublicClient({
-  chain: baseSepolia,
-  transport: http()
-});
 
-export const getTxDetails = async (hash: `0x${string}`): Promise<TransactionReceipt | undefined> => {
+export const getTxDetails = async ({ hash, chainid }: { hash: `0x${string}`, chainid: number }): Promise<TransactionReceipt | undefined> => {
+  const client = createPublicClient({
+    chain: chainid === 7777777 ? zora : baseSepolia,
+    transport: http()
+  });
   const transactionReceipt = await client.waitForTransactionReceipt({ hash });
   return transactionReceipt || undefined;
 }
