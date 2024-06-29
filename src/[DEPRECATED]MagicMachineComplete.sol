@@ -30,10 +30,6 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     ///
     /// @dev The `owner` may change that `price` with the `setPrices` function.    
     uint256 public tn100xPrice = 420 ether;
-    /// @notice The percentage discounted from prices on multiple distribution.
-    ///
-    /// @dev The `owner` may change that `discount` with the `setPrices` function.
-    uint256 public discount = 90;    
     
     /// @notice The address of the DEGEN token.
     address public immutable DEGEN = 0x012e2725400D3480D9Bc6E71cB36e07CE094ef62;//0xc248c157Ab73C1d71927626FaB0F01Ce58811ddd;//0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed;
@@ -44,11 +40,6 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     address public immutable TN100X = 0x012e2725400D3480D9Bc6E71cB36e07CE094ef62;//0xc248c157Ab73C1d71927626FaB0F01Ce58811ddd;//0x5B5dee44552546ECEA05EDeA01DCD7Be7aa6144A;
     /// @notice The interface of the TN100X token.
     IERC20 private immutable ITN100X;
-    
-    /// @notice The address of the J. recipient.
-    address public theJ = 0x012e2725400D3480D9Bc6E71cB36e07CE094ef62;
-    /// @notice The address of the M. recipient.
-    address public theM = 0x012e2725400D3480D9Bc6E71cB36e07CE094ef62;
 
     /// @notice An enum for the nft states: in or out.
     ///
@@ -83,8 +74,6 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     error Price();
     /// @notice Thrown on 'distributeRandomItem' when the machine is empty.
     error EmptyMachine();
-    /// @notice Thrown on attempt to call or access non-allowed functions.
-    error Forbidden();
     /// @notice Thrown on `deposit` and `withdraw` when the length of arrays is not the same.
     error ArraysMissmatch();
     /// @notice Thrown on 'withdraw' when the transfer call fails.
@@ -256,8 +245,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     ///
     /// @dev When there is no more available nfts, the load will be safely ignored.
     function distributeRandomItems(uint256 amount) public payable {
-        uint256 amountToBePaid = price * amount * 90 / 100;
-        if(msg.value != amountToBePaid && amount != 0) revert Price(); 
+        if(msg.value != price * amount && amount != 0) revert Price(); 
         
         for (uint256 i = 0; i < amount; i++) {
             _distributeRandomItem();
@@ -271,8 +259,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     ///
     /// @dev When there is no more available nfts, the load will be safely ignored.
     function distributeRandomItemsDegen(uint256 amount) public payable {
-        uint256 amountToBePaid = degenPrice * amount * 90 / 100;
-        bool success = IDEGEN.transferFrom(msg.sender, address(this), amountToBePaid);
+        bool success = IDEGEN.transferFrom(msg.sender, address(this), degenPrice * amount);
         if (!success) revert Price();
         
         for (uint256 i = 0; i < amount; i++) {
@@ -287,8 +274,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     ///
     /// @dev When there is no more available nfts, the load will be safely ignored.
     function distributeRandomItemsTN100x(uint256 amount) public payable {
-        uint256 amountToBePaid = tn100xPrice * amount * 90 / 100;        
-        bool success = ITN100X.transferFrom(msg.sender, address(this), amountToBePaid);
+        bool success = ITN100X.transferFrom(msg.sender, address(this), tn100xPrice * amount);
         if (!success) revert Price();
         
         for (uint256 i = 0; i < amount; i++) {
@@ -358,14 +344,12 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @notice Sets the prices that must be paid to call the `distributeRandomItem` functions.
     /// 
     /// @param newPrice The amount of ether for setting as the `price` or Zero.
-    /// @param newDegenPrice The amount of DEGEN for setting as the `degenPrice` or Zero.
-    /// @param newTn100xPrice The amount of TN100X for setting as the `tn100xPrice` or Zero.
-    /// @param newDiscount The percentage amount for setting as the `discount` or Zero.
-    function setPrices(uint newPrice, uint newDegenPrice, uint newTn100xPrice, uint newDiscount) public onlyOwner {
+    /// @param newPrice The amount of DEGEN for setting as the `degenPrice` or Zero.
+    /// @param newPrice The amount of TN100X for setting as the `tn100xPrice` or Zero.
+    function setPrices(uint256 newPrice, uint256 newDegenPrice, uint256 newTn100xPrice) public onlyOwner {
         price = newPrice != 0 ? newPrice : price;
         degenPrice = newDegenPrice != 0 ? newDegenPrice : degenPrice;
         tn100xPrice = newTn100xPrice != 0 ? newTn100xPrice : tn100xPrice;
-        discount = newDiscount != 0 ? newDiscount : discount;
     }
     
     /// @notice Withdraw multiple NFTs, only for emergencies. Migration, locked nfts..
@@ -415,7 +399,7 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
             }
         }
     }
-/*    
+    
     /// @notice Withdraw all the ether from the contract. 
     ///
     /// @param to The address of the recipient to send the ether to.
@@ -435,58 +419,6 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
         IERC20 i20 = IERC20(token);
         bool success = i20.transferFrom(address(this), msg.sender, i20.balanceOf(address(this)));
         if (!success) revert Withdrawal();
-    }
-*/
-    /// @notice Withdraw all the ether from the contract. 
-    ///
-    /// @dev Balance split between 3 parties, owner -> 70%, J -> 20% and M -> 10%.
-    function withdraw() public {
-        // compute amounts, 70%, 20%, 10%
-        uint256 balance = address(this).balance;
-        uint256 amountOwner = balance * 70 / 100;
-        uint256 amountJ = (balance - amountOwner) * 66 / 100;
-        uint256 amountM = balance - amountOwner - amountJ;
-        // transfer the amounts
-        (bool success, ) = payable(theJ).call{value: amountJ}("");
-        (success, ) = payable(owner()).call{value: amountOwner}("");         
-        (success, ) = payable(theM).call{value: amountM}(""); 
-    }
-    
-    /// @notice Withdraw any erc20 token from the contract. 
-    ///
-    /// @param token The address of the token to withdraw.
-    ///
-    /// @dev Balance split between 3 parties, owner -> 70%, J -> 20% and M -> 10%.
-    function withdrawToken(address token) public {
-        if (token != DEGEN && token != TN100X && msg.sender != owner()) revert Forbidden();
-        IERC20 i20 = IERC20(token);
-        // compute amounts, 70%, 20%, 10%
-        uint256 balance = i20.balanceOf(address(this));
-        uint256 amountOwner = balance * 70 / 100;
-        uint256 amountJ = (balance - amountOwner) * 66 / 100;
-        uint256 amountM = balance - amountOwner - amountJ;
-        // transfer the amounts
-        i20.transferFrom(address(this), theJ, amountJ);
-        i20.transferFrom(address(this), owner(), amountOwner);
-        i20.transferFrom(address(this), theM, amountM);
-    }
-    
-    /// @notice Set a new `theJ` address. Only callable from current `theJ`.
-    ///
-    /// @param newJ The address for setting as `theJ`. Must be non-zero address.
-    function changeTheJ(address newJ) public {
-        if (msg.sender != theJ) revert Forbidden();
-        if (newJ == address(0)) revert ZeroAddress();
-        theJ = newJ;
-    }
-    
-    /// @notice Set a new `theM` address. Only callable from current `theM`.
-    ///
-    /// @param newM The address for setting as `theM`. Must be non-zero address.
-    function changeTheM(address newM) public {
-        if (msg.sender != theM) revert Forbidden();
-        if (newM == address(0)) revert ZeroAddress();
-        theM = newM;
     }
     
     // view functions

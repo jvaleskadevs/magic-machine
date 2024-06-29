@@ -44,7 +44,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       if (state?.amount === 1) {
         amount = state?.chain === 1 ? ENJOY_PRICE : DEGEN_PRICE;
       } else if (state?.amount === 3) {
-        amount = (state?.chain === 1 ? ENJOY_PRICE : DEGEN_PRICE ) * MULTIAMOUNT  
+        amount = (state?.chain === 1 ? ENJOY_PRICE : DEGEN_PRICE ) * MULTIAMOUNT * BigInt(90) / BigInt(100);
       }
       break;
     case 2:
@@ -52,7 +52,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       if (state?.amount === 1) {
         amount = state?.chain === 1 ? IMAGINE_PRICE : TN100X_PRICE;
       } else if (state?.amount === 3) {
-        amount = (state?.chain === 1 ? IMAGINE_PRICE : TN100X_PRICE ) * MULTIAMOUNT;       
+        amount = (state?.chain === 1 ? IMAGINE_PRICE : TN100X_PRICE ) * MULTIAMOUNT * BigInt(90) / BigInt(100);       
       }
       break;
     default:
