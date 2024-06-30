@@ -2,7 +2,8 @@ This repo contains a Foundry project with the smart contracts of the Magic Machi
 
 ## Magic Machine
 
-![alt text](https://github.com/jvaleskadevs/magic-machine/blob/main/intro.jpeg?raw=true)
+![alt text](https://github.com/jvaleskadevs/magic-machine/blob/main/frame/magic-machine-frame/public/intro.jpeg?raw=true)
+![alt text](https://github.com/jvaleskadevs/magic-machine/blob/main/frame/magic-machine-frame/public/intro.png?raw=true)
 
 
 A machine for random distribution of previously curated artworks imitating the behaviour of a vending machine.
