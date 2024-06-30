@@ -16,48 +16,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const body: ValidateFramesMessageInput = await req.json();
   const { isValid, message } = await validateFramesMessage(body);
   if (!isValid) return new NextResponse(Errors.NoValidMessage);
-/*
-  const action = message?.data?.frameActionBody || undefined;
- 
-  if (action?.buttonIndex === 1) {
-    const data = encodeFunctionData({
-      abi: MACHINE.abi,
-      functionName: 'distributeRandomItem'
-    });
-    
-    const txData: FrameTransactionResponse = {
-      chainId: `eip155:${baseSepolia.id}`,
-      method: 'eth_sendTransaction',
-      params: {
-        abi: MACHINE.abi,
-        data,
-        to: MACHINE.address,
-        value: PRICE
-      }
-    };
-        
-    return NextResponse.json(txData);    
-  } else if (action?.buttonIndex === 2) {
-    const data = encodeFunctionData({
-      abi: MACHINE.abi,
-      functionName: 'distributeRandomItems',
-      args: [MULTIAMOUNT]
-    });
-    
-    const txData: FrameTransactionResponse = {
-      chainId: `eip155:${baseSepolia.id}`,
-      method: 'eth_sendTransaction',
-      params: {
-        abi: MACHINE.abi,
-        data,
-        to: MACHINE.address,
-        value: MULTIPRICE
-      }
-    };
-        
-    return NextResponse.json(txData);    
-  }
-*/ 
+
   const targetUrl = `${URL}/api/frame/chain`;
   return new NextResponse(getFrameHtmlResponse({
     buttons: [

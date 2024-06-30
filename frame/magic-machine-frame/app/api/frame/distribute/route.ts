@@ -32,24 +32,24 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log(state);
   
   let amount = parseInt(req.nextUrl.searchParams.get('amount') ?? '') ?? undefined;
-  console.log(amount);
+  //console.log(amount);
   if (!amount) amount = state?.amount ?? 1;
-  console.log(amount);
+  //console.log(amount);
   
   let chain = parseInt(req.nextUrl.searchParams.get('chain') ?? '') ?? undefined;
-  console.log(chain);
+  //console.log(chain);
   if (!chain) chain = state?.chain ?? 1;
-  console.log(chain);  
+  //console.log(chain);  
   
   let payment = parseInt(req.nextUrl.searchParams.get('payment') ?? '') ?? undefined;
-  console.log(payment);
+  //console.log(payment);
   if (!payment) payment = state?.payment ?? undefined;  
-  console.log(payment);
+  //console.log(payment);
   if (!payment) payment = action?.buttonIndex === 1 
       ? 0 : action?.buttonIndex === 2 
         ? 1 : action?.buttonIndex === 3 
           ? 2 : 0;
-  console.log(payment);
+  //console.log(payment);
   
   const targetApprove = `${URL}/api/frame/tx-approve`;
   const targetDistribute = `${URL}/api/frame/tx-distribute`;

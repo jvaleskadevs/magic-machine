@@ -15,6 +15,8 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 /// @notice Distributes random nfts (ERC-721 and/or ERC-1155) based on a vending machine
 ///         behaviour. Owner must deposit nfts and load the machine before distribution.
 ///
+/// @dev DEGEN == ENJOY, TN100X == IMAGINE, maintaining nomenclature for compatibility.
+///
 /// @author J. Valeska (https://github.com/jvaleskadevs/magic-machine).
 /// 
 contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {    
@@ -25,23 +27,23 @@ contract MagicMachine is Ownable, ERC721Holder, ERC1155Holder {
     /// @notice That amount of DEGEN must be paid before every random distribution.
     ///
     /// @dev The `owner` may change that `price` with the `setPrices` function.    
-    uint256 public degenPrice = 420 ether;
+    uint256 public degenPrice = 33333 ether;
     /// @notice That amount of TN100X must be paid before every random distribution.
     ///
     /// @dev The `owner` may change that `price` with the `setPrices` function.    
-    uint256 public tn100xPrice = 4200 ether;
+    uint256 public tn100xPrice = 1111 ether;
     /// @notice The percentage discounted from prices on multiple distribution.
     ///
     /// @dev The `owner` may change that `discount` with the `setPrices` function.
     uint256 public discount = 90;    
     
     /// @notice The address of the DEGEN token.
-    address public immutable DEGEN = 0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed;
+    address public immutable DEGEN = 0xa6B280B42CB0b7c4a4F789eC6cCC3a7609A1Bc39;
     /// @notice The interface of the DEGEN token.
     IERC20 private immutable IDEGEN;
     
     /// @notice The address of the TN100X token.
-    address public immutable TN100X = 0x5B5dee44552546ECEA05EDeA01DCD7Be7aa6144A;
+    address public immutable TN100X = 0x078540eECC8b6d89949c9C7d5e8E91eAb64f6696;
     /// @notice The interface of the TN100X token.
     IERC20 private immutable ITN100X;
 

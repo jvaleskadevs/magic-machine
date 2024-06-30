@@ -41,14 +41,14 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     {
       action: 'link',
       label: 'View artwork',
-      target: `https://testnets.opensea.io/assets/base-sepolia/${nft}/${tokenId}`
-      //target: `https://zora.co/collect/${chainid === zora.id ? 'zora' : 'base'}:${nft}/${tokenId}`
+      //target: `https://testnets.opensea.io/assets/base-sepolia/${nft}/${tokenId}`
+      target: `https://zora.co/collect/${chainid === zora.id ? 'zora' : 'base'}:${nft}/${tokenId}`
     },
     {
       action: 'link',
       label: 'View in Explorer',
-      target: `https://sepolia.basescan.org/tx/${body?.untrustedData?.transactionId || ''}`
-      //target: chainid === zora.id ? `https://explorer.zora.energy/tx/${body?.untrustedData?.transactionId || ''}` : `https://basescan.org/tx/${body?.untrustedData?.transactionId || ''}`
+      //target: `https://sepolia.basescan.org/tx/${body?.untrustedData?.transactionId || ''}`
+      target: chainid === zora.id ? `https://explorer.zora.energy/tx/${body?.untrustedData?.transactionId || ''}` : `https://basescan.org/tx/${body?.untrustedData?.transactionId || ''}`
     },
     {
       label: 'Find more art',

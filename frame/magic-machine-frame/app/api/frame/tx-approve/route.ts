@@ -6,7 +6,7 @@ import {
   ValidateFramesMessageInput
 } from '@airstack/frames';
 import { Address, encodeFunctionData, toHex } from 'viem';
-import { baseSepolia, zoraSepolia } from 'viem/chains';
+import { base, zora } from 'viem/chains';
 import { fromBytes } from 'viem';
 import { MACHINE, MACHINE_ZORA, MULTIPRICE, MULTIAMOUNT, PRICE, ENJOY, DEGEN, IMAGINE, TN100X, DEGEN_PRICE, TN100X_PRICE, ENJOY_PRICE, IMAGINE_PRICE, URL } from '../../../config';
 import { Errors } from '../../../errors';
@@ -22,7 +22,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   
   // deserialize state
   const stateStr: any = fromBytes((action?.state ?? []) as Uint8Array, 'string');
-  //?? '{"data":"empty"}';
+
   let state: any;
   if (stateStr) {
     try {
@@ -70,7 +70,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   });
   
   const txData: FrameTransactionResponse & { attribution: boolean } = {
-    chainId: `eip155:${state?.chain === 1 ? zoraSepolia.id : baseSepolia.id}`,
+    chainId: `eip155:${state?.chain === 1 ? zora.id : base.id}`,
     method: 'eth_sendTransaction',
     attribution: false,
     params: {

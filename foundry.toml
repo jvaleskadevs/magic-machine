@@ -13,7 +13,7 @@ zoraSepolia = "https://sepolia.rpc.zora.energy"
 [etherscan]
 baseSepolia = { key = "", url = "https://api-sepolia.basescan.org/api" }
 base = { key = "$BASESCAN_API_KEY", url = "https://api.basescan.org/api" }
-zora = { key = "", url = "https://explorer.zora.energy", chainid = 7777777 }
+zora = { key = "", url = "https://explorer.zora.energy/api?", chainid = 7777777 }
 zoraSepolia = { key = "", url = "https://sepolia.explorer.zora.energy", chainid = 999999999 }
 
 
