@@ -2,7 +2,13 @@ This repo contains a Foundry project with the smart contracts of the Magic Machi
 
 ## Magic Machine
 
+![alt text](https://github.com/jvaleskadevs/magic-machine/blob/main/intro.jpeg?raw=true)
+
+
 A machine for random distribution of previously curated artworks imitating the behaviour of a vending machine.
+
+The owner curates and loads the machine with nfts, erc1155 and erc721 supported, calling the deposit and loadMachine functions in the smart contract,
+then, these artworks are randomly distributes to collectors who interacts with the farcaster frame of the Magic Machine.
 
 
 ## What is the Magic Machine?
