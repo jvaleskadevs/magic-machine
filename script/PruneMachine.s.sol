@@ -11,7 +11,7 @@ contract PruneMachineScript is Script {
 
     function run() public {
         //address machineAddress = address(0xf42d8aa36a328ef5a44D37ae9B035Aa5BE47764a); // baseSepolia
-        address machineAddress = address(0x38529794394959DD2b2db3edDF9b04ed5D407573); // zoraSepolia
+        address machineAddress = address(0xCaCd62a501991E50b8806a89fB993164b8501212); // zoraSepolia
         //address deployer = address(0xA9fD03e154e1B3Cbe88F1b515E7EbDAb2d640b60);
     
         MagicMachine mm = MagicMachine(machineAddress);
@@ -21,13 +21,16 @@ contract PruneMachineScript is Script {
     
         vm.startBroadcast(vm.envUint("PK"));
         
-        mm.pruneMachine(indexes);
+        mm.transferOwnership(address(0x2D0A6C67dc678E852483924225660ad5a4349335));
+        //mm.pruneMachine(indexes);
         //mm.withdraw();
         //mm.distributeRandomItem{value: mm.price()}();
         //mm.distributeRandomItem{value: mm.price()}();
         //mm.distributeRandomItem{value: mm.price()}();
+        /*
         for (uint i = 0; i < 69; i++) {
             console.log(mm.machine(i));
         }
+        */
     }
 }

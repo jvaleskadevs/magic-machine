@@ -1,5 +1,17 @@
 This repo contains a Foundry project with the smart contracts of the Magic Machine and the frame to interact with these smart contracts from the farcaster decentralized network.
 
+Frame at WC Frame Tools: 
+
+Magic Machine frame:
+
+[Open Warpcast](https://warpcast.com/~/developers/frames?url=https%3A%2F%2Fmagic-machine-five.vercel.app)
+
+Magic Machine smart contracts: 
+
+- [Base](https://basescan.org/address/0x4aa3e709758142f47180258167818551c874e2a5)
+
+- [Zora](https://explorer.zora.energy/address/0xCaCd62a501991E50b8806a89fB993164b8501212)
+
 ## Magic Machine
 
 <img src="https://github.com/jvaleskadevs/magic-machine/blob/main/frame/magic-machine-frame/public/intro.png" width="360" height="360">
