@@ -12,19 +12,25 @@ contract MintNFTsScript is Script {
     }
 
     function run() public {
-        address machineAddress = address(0x7B5aF107233700d09d550f44650D3a4c25a9a0e2);
-        //address nftAddress = address(0x2ACDEe0636B57961f007ac74EfFCb76ad60A33D4);
+        //address machineAddress = address(0xCaCd62a501991E50b8806a89fB993164b8501212);
+        address machineAddress = address(0x4aa3e709758142F47180258167818551C874e2A5);
+        //address nftAddress = address(0x6b415D22147bf761f72cD979f8b2C0b67E0978bF);
+        address nftAddress = address(0x5B88F2b1E3c6938e30f6B503EeD0F00C4eE1DCCd);
         address deployer = address(0x26281BB0b775A59Db0538b555f161E8F364fd21e);
     
         vm.startBroadcast(vm.envUint("PK"));
         
         MagicMachine mm = MagicMachine(machineAddress);
-        NFT nft = new NFT(deployer);
-        NFT1155 nft1155 = new NFT1155(deployer);
+        //NFT nft = new NFT(deployer);
+        //NFT1155 nft1155 = new NFT1155(deployer);
 
-        address[] memory addresses = new address[](8);
-        uint256[] memory tokenIds = new uint256[](8);  
-        
+        //NFT nft = new NFT(deployer);
+        NFT1155 nft1155 = NFT1155(nftAddress);
+        uint totalNfts = 21;
+
+        address[] memory addresses = new address[](totalNfts);
+        uint256[] memory tokenIds = new uint256[](totalNfts);  
+/*        
         for (uint i = 0; i < 4; i++) {
             nft.safeMint(deployer, "");
             nft.approve(machineAddress, i);
@@ -35,7 +41,13 @@ contract MintNFTsScript is Script {
             tokenIds[i] = i;       
             tokenIds[i+4] = i;      
         }
-        nft1155.setApprovalForAll(machineAddress, true);
+*/
+        for (uint i = 0; i < totalNfts; i++) {
+            addresses[i] = nftAddress;
+            tokenIds[i] = 9;
+        }
+
+        //nft1155.setApprovalForAll(machineAddress, true);
         
         mm.deposit(addresses, tokenIds, true);
         

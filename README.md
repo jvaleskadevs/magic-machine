@@ -10,9 +10,7 @@ A machine for random distribution of previously curated artworks imitating the b
 The owner curates and loads the machine with nfts, erc1155 and erc721 supported,
 then, these artworks are randomly distributed to collectors who interacts with the frame of the Magic Machine in the farcaster network.
 
-Magic Machine frame:
-
-[Open Warpcast](https://warpcast.com/~/developers/frames?url=https%3A%2F%2Fmagic-machine-five.vercel.app)
+Magic Machine frame: [Open Warpcast](https://warpcast.com/~/developers/frames?url=https%3A%2F%2Fmagic-machine-five.vercel.app)
 
 Magic Machine smart contracts: 
 
