@@ -82,6 +82,10 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log(functionName);
   console.log(price);
   console.log(args);
+  
+  if (functionName != 'distributeRandomItem') {
+    return new NextResponse(Errors.NoValidMessage); 
+  }
  
   const data = encodeFunctionData({
     abi: MACHINE.abi,

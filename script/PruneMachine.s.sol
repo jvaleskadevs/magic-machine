@@ -10,8 +10,8 @@ contract PruneMachineScript is Script {
     }
 
     function run() public {
-        //address machineAddress = address(0xf42d8aa36a328ef5a44D37ae9B035Aa5BE47764a); // baseSepolia
-        address machineAddress = address(0xCaCd62a501991E50b8806a89fB993164b8501212); // zoraSepolia
+        address machineAddress = address(0x4aa3e709758142F47180258167818551C874e2A5); // base
+        //address machineAddress = address(0xCaCd62a501991E50b8806a89fB993164b8501212); // zoraSepolia
         //address deployer = address(0xA9fD03e154e1B3Cbe88F1b515E7EbDAb2d640b60);
     
         MagicMachine mm = MagicMachine(machineAddress);
@@ -21,9 +21,12 @@ contract PruneMachineScript is Script {
     
         vm.startBroadcast(vm.envUint("PK"));
         
-        mm.transferOwnership(address(0x2D0A6C67dc678E852483924225660ad5a4349335));
+
         //mm.pruneMachine(indexes);
-        //mm.withdraw();
+        mm.withdraw();
+        //mm.withdrawToken(0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed);
+        mm.withdrawToken(0x5B5dee44552546ECEA05EDeA01DCD7Be7aa6144A);
+        mm.transferOwnership(address(0x2D0A6C67dc678E852483924225660ad5a4349335));
         //mm.distributeRandomItem{value: mm.price()}();
         //mm.distributeRandomItem{value: mm.price()}();
         //mm.distributeRandomItem{value: mm.price()}();
