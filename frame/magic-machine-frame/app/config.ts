@@ -43,10 +43,10 @@ export const IMAGINE: ContractData = {
 }
 
 export const PRICE = parseEther('0.001').toString();
-export const DEGEN_PRICE = parseEther('420');
-export const TN100X_PRICE = parseEther('4200');
-export const ENJOY_PRICE = parseEther('33333');
-export const IMAGINE_PRICE = parseEther('1111');
+export const DEGEN_PRICE = parseEther('69');
+export const TN100X_PRICE = parseEther('69');
+export const ENJOY_PRICE = parseEther('69');
+export const IMAGINE_PRICE = parseEther('69');
 export const MULTIAMOUNT = BigInt(3);
 export const MULTIPRICE = (parseEther('0.000777') * MULTIAMOUNT * BigInt(90) / BigInt(100)).toString();
 
