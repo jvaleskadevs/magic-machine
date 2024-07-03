@@ -79,7 +79,8 @@ contract MagicMachineTest is Test, ERC721Holder, ERC1155Holder {
         //mm.loadMachine(true);
         assertEq(mm.machine(0), 1);
         
-        mm.distributeRandomItem{value: mm.price()}();
+        //mm.distributeRandomItem{value: mm.price()}();
+        mm.distributeRandomItems{value: mm.price() * 90 * 3 / 100}(3);
         
         assertEq(mm.lastMappingIndex(), 9);
         
