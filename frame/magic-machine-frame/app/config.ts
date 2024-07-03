@@ -48,5 +48,5 @@ export const TN100X_PRICE = parseEther('69');
 export const ENJOY_PRICE = parseEther('69');
 export const IMAGINE_PRICE = parseEther('69');
 export const MULTIAMOUNT = BigInt(3);
-export const MULTIPRICE = (parseEther('0.001') * MULTIAMOUNT * BigInt(90) / BigInt(100)).toString();
+export const MULTIPRICE = '2700000000000000';//(parseEther('0.001') * MULTIAMOUNT * BigInt(90) / BigInt(100)).toString();
 
