@@ -42,11 +42,11 @@ export const IMAGINE: ContractData = {
   address: '0x078540eecc8b6d89949c9c7d5e8e91eab64f6696' //'0xc248c157Ab73C1d71927626FaB0F01Ce58811ddd'
 }
 
-export const PRICE = parseEther('0.001').toString();
-export const DEGEN_PRICE = parseEther('69');
-export const TN100X_PRICE = parseEther('69');
+export const PRICE = parseEther('0.00143').toString();
+export const DEGEN_PRICE = parseEther('850');
+export const TN100X_PRICE = parseEther('13250');
 export const ENJOY_PRICE = parseEther('69');
 export const IMAGINE_PRICE = parseEther('69');
 export const MULTIAMOUNT = BigInt(3);
-export const MULTIPRICE = '2700000000000000';//(parseEther('0.001') * MULTIAMOUNT * BigInt(90) / BigInt(100)).toString();
+export const MULTIPRICE = '3861000000000000';//(parseEther('0.001') * MULTIAMOUNT * BigInt(90) / BigInt(100)).toString();
 

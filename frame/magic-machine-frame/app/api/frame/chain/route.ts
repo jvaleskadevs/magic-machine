@@ -24,11 +24,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       {
         label: 'Base',
         target: targetUrl
-      },
+      }/*,
       {
         label: 'Zora',
         target: targetUrl
-      }
+      }*/
     ],
     image: {
       src: `${URL}/chain.jpeg`,
